@@ -1,0 +1,4 @@
+pandas
+lxml
+chardet
+apache-airflow==2.8.4
