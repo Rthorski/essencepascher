@@ -1,5 +1,9 @@
 pandas
+google-cloud-storage
+python-dotenv
+bs4
 lxml
 chardet
 beautifulsoup4
 apache-airflow
+psycopg2-binary
