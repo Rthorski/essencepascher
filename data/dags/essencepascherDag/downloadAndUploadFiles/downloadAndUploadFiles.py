@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 import requests
 from airflow.exceptions import AirflowException
-from utils.utils import authentificateServiceAccount
+from utils.utils import authentificateServiceAccount, config
 
 def renameObjectName(url):
   
