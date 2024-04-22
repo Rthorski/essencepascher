@@ -6,7 +6,6 @@ import xml.etree.ElementTree as ET
 from io import BytesIO
 import zipfile
 import psycopg
-import time
 import pandas as pd
 
 def rename_object_name(url):
@@ -62,7 +61,6 @@ def create_dataframes(root):
   stations = []
   jours = []
   services = []
-  automate_24_24 = []
   prix = []
   ruptures = []
 
@@ -81,7 +79,6 @@ def create_dataframes(root):
           service_dict = {**service_dict, **station_id_dict}
           services.append(service_dict)
       elif child.tag == 'horaires':
-        automate_24_24.append({**child.attrib, **station_id_dict})
         for j in child.findall('jour'):
           try:
             j_dict = {**j.attrib, **j.find('horaire').attrib, **station_id_dict}
@@ -96,7 +93,7 @@ def create_dataframes(root):
         
     stations.append(pdv_dict)
     
-  return [{"stations": stations}, {"horaires": jours}, {"services": services}, {"automate": automate_24_24}, {"prix": prix}, {"ruptures": ruptures}]
+  return [{"stations": stations}, {"horaires": jours}, {"services": services}, {"prix": prix}, {"ruptures": ruptures}]
   
   
 def load_tables_in_database(list_of_dict):
@@ -106,8 +103,8 @@ def load_tables_in_database(list_of_dict):
     for name, dict_df in couple_of_attributs.items():
       
       df = pd.DataFrame(dict_df)
-
-      if name in ["horaires", "services", "stations", "automate", "ruptures"]:
+      
+      if name in ["horaires", "services", "stations", "ruptures"]:
         
         df.to_sql(
             name=f"{name}",
@@ -126,4 +123,12 @@ def load_tables_in_database(list_of_dict):
             schema="dev",
             method=psql_insert_copy
           )
+
+
+def drop_dev_schema_database():
+  
+  with psycopg.connect(conn_psycopg) as conn:
+    with conn.cursor() as cur:
+      cur.execute('DROP SCHEMA if exists dev CASCADE;')
+      cur.execute('CREATE SCHEMA dev;')
       

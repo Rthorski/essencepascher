@@ -1,5 +1,6 @@
 from airflow import DAG
 from airflow.operators.python import PythonOperator
+from airflow.operators.bash import BashOperator
 from essence_pas_cher.essence_pas_cher_controller import upload_on_gcp, load_to_database
 import datetime
 
@@ -26,4 +27,8 @@ with DAG(
   python_callable=load_to_database
 )
   
-task_upload_on_gcp >> task_load_to_database
+  task_dbt = BashOperator(
+  task_id="dbt_run",
+  bash_command="cd ${AIRFLOW_HOME}/dags/dbt_essencepascher && dbt run",
+)
+task_upload_on_gcp >> task_load_to_database >> task_dbt
