@@ -104,25 +104,14 @@ def load_tables_in_database(list_of_dict):
       
       df = pd.DataFrame(dict_df)
       
-      if name in ["horaires", "services", "stations", "ruptures"]:
-        
-        df.to_sql(
-            name=f"{name}",
-            con=engine,
-            if_exists='replace',
-            schema="dev",
-            method=psql_insert_copy,
-            index=False
-          )
-      else:
-
-        df.to_sql(
-            name=f"{name}",
-            con=engine,
-            if_exists='append',
-            schema="dev",
-            method=psql_insert_copy
-          )
+      df.to_sql(
+          name=f"{name}",
+          con=engine,
+          if_exists='replace',
+          schema="dev",
+          method=psql_insert_copy,
+          index=False
+        )
 
 
 def drop_dev_schema_database():
