@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: staging
+    database: essencepascher_db
+    schema: dev
+    tables:
+      - name: horaires
+      - name: prix
+      - name: ruptures
+      - name: services
+      - name: stations
