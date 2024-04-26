@@ -11,10 +11,10 @@ def upload_on_gcp(**context):
   
 def load_to_database(**context):
   ti = context['ti']
+  date_ti = context['ts']
   object_name = ti.xcom_pull(key='object_name', task_ids='upload_on_gcp')
   root = parseFile(object_name)
   list_of_dict = create_dataframes(root)
-  drop_dev_schema_database()
-  load_tables_in_database(list_of_dict)
+  load_tables_in_database(list_of_dict, date_ti)
     
   
