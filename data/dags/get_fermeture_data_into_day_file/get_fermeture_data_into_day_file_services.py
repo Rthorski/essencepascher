@@ -1,5 +1,5 @@
-import pandas as pd
-from essence_pas_cher.essence_pas_cher_load import get_table_to_dataframe, read_data_entry, get_entry_data, search_new_or_updated_rows, insert_and_update_rows
+from essence_pas_cher.essence_pas_cher_load import insert_and_update_rows
+
 
 def create_dataframes(root):
 
@@ -15,16 +15,17 @@ def create_dataframes(root):
          
   return [{"fermetures": fermetures}]
 
-def load_tables_in_database(list_of_dict):
+
+def get_dict_fermetures(list_of_dict):
   
-  for couple_of_attributs in list_of_dict:
+  fermetures_dict = list_of_dict[0]
+  
+  for name, dict_df in fermetures_dict.items():
     
-    for name, dict_df in couple_of_attributs.items():
-      
-      load_fermetures_table(dict_df, name)
+    return name, dict_df
+  
 
-
-def load_fermetures_table(dict_df, name):
+def set_columns_and_dtypes():
   
   columns = ('type, debut, fin, station_id, concatened_id')
   
@@ -37,25 +38,36 @@ def load_fermetures_table(dict_df, name):
   }
   
   d_type_fermetures = dtype.copy()
+  
   d_type_fermetures.pop('concatened_id')
   
-  df_table_fermetures = get_table_to_dataframe(columns=columns, name=name, dtype=dtype)
-
-  df_entry_data = read_data_entry(dict_df=dict_df)
-  df_entry_data = get_entry_data(df=df_entry_data, dtype=d_type_fermetures)
-  df_fermetures = concatenate_primary_key(df_entry_data)
-
-  news_rows = search_new_or_updated_rows(df_table=df_table_fermetures,
-                                         df_entry_data=df_fermetures)
+  return columns, dtype, d_type_fermetures
   
-  print(f"nouvelles lignes dans la table fermetures: {news_rows.shape}")
   
-  news_rows = news_rows[["type", "debut", "fin", "station_id", "injected_at","concatened_id"]]
-  insert_and_update_rows(news_rows, name, primary_key="concatened_id")
+def load_if_news_rows_is_true(news_rows, name):
+    
+  if news_rows is True:
+    print(f"nouvelles lignes dans la table fermetures: {news_rows.shape}")
+    
+    news_rows = news_rows[["type", "debut", "fin", "station_id", "injected_at","concatened_id"]]
+    insert_and_update_rows(news_rows, name, primary_key="concatened_id")
+
+  else:
+    print(news_rows.shape)
+    print("pas de nouvelles lignes")
 
 
 def concatenate_primary_key(df):
   
   df['concatened_id'] = df['type'] + "-" + df['debut'] + "-" + df['station_id']
   
+  return df
+
+
+def drop_duplicates(df):
+
+  df = df.sort_values(by=["station_id", "type", "debut", "fin"], ascending=True)
+
+  df.drop_duplicates(subset=['type', 'debut', 'station_id'], keep='last', inplace=True)
+
   return df
