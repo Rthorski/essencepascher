@@ -5,8 +5,9 @@ sources:
     database: essencepascher_db
     schema: dev
     tables:
-      - name: horaires
-      - name: prix
-      - name: ruptures
-      - name: services
       - name: stations
+      - name: prix
+      - name: fermetures
+      - name: horaires
+      - name: services
+      - name: ruptures

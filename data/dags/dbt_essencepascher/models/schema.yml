@@ -1,0 +1,27 @@
+models:
+  - name: stg_staging_prix
+    config:
+      contract:
+        enforced: true
+
+    columns:
+      - name: station_id
+        data_type: int
+      - name: nom
+        data_type: varchar(255)
+      - name: id
+        data_type: int
+      - name: maj
+        data_type: timestamp
+      - name: valeur
+        data_type: float
+      - name: injected_at
+        data_type: timestamp
+      - name: price_id
+        data_type: int
+        constraints:
+          - type: not_null
+          - type: unique
+          - type: primary_key
+      - name: created_at
+        data_type: timestamp without time zone
