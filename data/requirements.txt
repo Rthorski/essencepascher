@@ -6,7 +6,7 @@ lxml
 chardet
 beautifulsoup4
 apache-airflow
-psycopg[binary]
-psycopg[pool]
+psycopg2-binary
+psycopg
 dbt-core
-dbt-postgres 
+dbt-postgres
