@@ -11,6 +11,15 @@ async function getStations(req, res) {
 }
 
 async function getLastPrice(req, res) {
+  try {
+    const result = await pool.query(queries.getLastPrice);
+    res.send(result.rows);
+  } catch (error) {
+    console.log("error:", error);
+  }
+}
+
+async function getLastPriceFiltered(req, res) {
   const { station_id } = req.body;
 
   if (!station_id) {
@@ -28,4 +37,5 @@ async function getLastPrice(req, res) {
 module.exports = {
   getStations,
   getLastPrice,
+  getLastPriceFiltered,
 };
