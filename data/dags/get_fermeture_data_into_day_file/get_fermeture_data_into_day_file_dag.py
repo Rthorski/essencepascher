@@ -12,7 +12,6 @@ default_args = {
 with DAG(
   dag_id="get_fermeture_data_into_day_file",
   default_args=default_args,
-  max_active_runs=1,
   schedule="0 7 * * *",
   catchup=False,
   params={"url": "https://donnees.roulez-eco.fr/opendata/annee/2024"}

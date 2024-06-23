@@ -46,7 +46,7 @@ def set_columns_and_dtypes():
   
 def load_if_news_rows_is_true(news_rows, name):
     
-  if news_rows.shape[0] > 1:
+  if news_rows is True:
     print(f"nouvelles lignes dans la table fermetures: {news_rows.shape}")
     
     news_rows = news_rows[["type", "debut", "fin", "station_id", "injected_at","concatened_id"]]
