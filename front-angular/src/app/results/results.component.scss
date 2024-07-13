@@ -1,0 +1,16 @@
+.station-container {
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: stretch;
+  border-bottom: grey 1px solid;
+}
+
+.carbu {
+  display: flex;
+  gap: 10px;
+}
+
+.carbu p {
+  display: block;
+}

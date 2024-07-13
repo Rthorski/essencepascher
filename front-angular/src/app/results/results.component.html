@@ -1,0 +1,11 @@
+@for (station of stations; track station.id) {
+<div class="station-container">
+  @for (prix of station.json_prix; track prix.id) {
+  <div class="carbu">
+    <p>{{ prix.nom }}</p>
+    <p>{{ prix.valeur }}€</p>
+    <p>{{ prix.maj }}</p>
+  </div>
+  }
+</div>
+}

@@ -1,0 +1,22 @@
+<div class="filter">
+  @if (geolocateClicked) {
+  <div class="filter-rayon">
+    <label for="radius">Rayon (en kilomètres entre 1 et 50) :</label>
+    <input
+      min="1"
+      max="50"
+      type="number"
+      id="radius"
+      [(ngModel)]="radius"
+      (keyup.enter)="onRadiusChange()"
+    />
+    <button (click)="onRadiusChange()">OK</button>
+  </div>
+  }
+</div>
+<div class="container">
+  <div class="map" #map></div>
+  <div class="results">
+    <app-results />
+  </div>
+</div>
