@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { MapComponent } from '../map/map.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { ResultsComponent } from '../results/results.component';
 
 @Component({
   selector: 'app-main',

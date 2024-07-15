@@ -12,7 +12,6 @@ import {
   config,
   Marker,
   GeolocateControl,
-  NavigationControl,
   LngLatBounds,
 } from '@maptiler/sdk';
 import '@maptiler/sdk/dist/maptiler-sdk.css';
@@ -46,7 +45,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    const initialState = { lng: 4.333333, lat: 46.866667, zoom: 5 };
+    const initialState = { lng: 2.45, lat: 46.866667, zoom: 5 };
 
     this.map = new Map({
       container: this.mapContainer.nativeElement,
