@@ -19,12 +19,18 @@ export class FindMajPipe implements PipeTransform {
         return `${Math.round(milliTominutes)} minutes`;
       }
       if (milliTominutes < 1440) {
-        return `${Math.round(milliTominutes / 60)} heures`;
+        return `${Math.round(milliTominutes / 60)} ${
+          Math.round(milliTominutes / 60) === 1 ? 'heure' : 'heures'
+        }`;
       }
       if (milliTominutes < 10080) {
-        return `${Math.round(milliTominutes / 60 / 24)} jours`;
+        return `${Math.round(milliTominutes / 60 / 24)} ${
+          Math.round(milliTominutes / 60 / 24) === 1 ? 'jour' : 'jours'
+        }`;
       }
-      return `${Math.round(milliTominutes / 60 / 24 / 7)} semaines`;
+      return `${Math.round(milliTominutes / 60 / 24 / 7)} ${
+        Math.round(milliTominutes / 60 / 24 / 7) === 1 ? 'semaine' : 'semaines'
+      }`;
     }
   }
 }
