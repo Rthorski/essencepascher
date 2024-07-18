@@ -7,6 +7,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class FindPricePipe implements PipeTransform {
   transform(jsonPrix: any[], fuelType: string): any {
     const priceObject = jsonPrix.find((prix) => prix.nom === fuelType);
-    return priceObject ? priceObject.valeur : '❌';
+    return priceObject ? parseFloat(priceObject.valeur) : '❌';
   }
 }

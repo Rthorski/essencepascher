@@ -1,6 +1,108 @@
-@if (stations.length > 0) {
-<div class="wrap-results">
-  <table>
+<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+  <ng-container matColumnDef="id">
+    <th
+      mat-header-cell
+      *matHeaderCellDef
+      mat-sort-header
+      sortActionDescription="Sort by ID"
+    >
+      id.
+    </th>
+
+    <td mat-cell *matCellDef="let element">
+      <div>{{ element.id }}</div>
+      <div>{{ element.town }}</div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="gazole">
+    <th
+      mat-header-cell
+      *matHeaderCellDef
+      mat-sort-header
+      sortActionDescription="Sort By Price"
+    >
+      gazole
+    </th>
+    <td mat-cell *matCellDef="let element">
+      <div>{{ element.gazole.valeur }}</div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="sp95">
+    <th
+      mat-header-cell
+      *matHeaderCellDef
+      mat-sort-header
+      sortActionDescription="Sort By Price"
+    >
+      sp95
+    </th>
+    <td mat-cell *matCellDef="let element">
+      <div>{{ element.sp95.valeur }}</div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="e10">
+    <th
+      mat-header-cell
+      *matHeaderCellDef
+      mat-sort-header
+      sortActionDescription="Sort By Price"
+    >
+      e10
+    </th>
+    <td mat-cell *matCellDef="let element">
+      <div>{{ element.e10.valeur }}</div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="sp98">
+    <th
+      mat-header-cell
+      *matHeaderCellDef
+      mat-sort-header
+      sortActionDescription="Sort By Price"
+    >
+      sp98
+    </th>
+    <td mat-cell *matCellDef="let element">
+      <div>{{ element.sp98.valeur }}</div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="e85">
+    <th
+      mat-header-cell
+      *matHeaderCellDef
+      mat-sort-header
+      sortActionDescription="Sort By Price"
+    >
+      e85
+    </th>
+    <td mat-cell *matCellDef="let element">
+      <div>{{ element.e85.valeur }}</div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="gplc">
+    <th
+      mat-header-cell
+      *matHeaderCellDef
+      mat-sort-header
+      sortActionDescription="Sort By Price"
+    >
+      gplc
+    </th>
+    <td mat-cell *matCellDef="let element">
+      <div>{{ element.gplc.valeur }}</div>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+<!-- <table>
     <thead>
       <tr>
         <th scope="col"></th>
@@ -37,6 +139,4 @@
       </tr>
       }
     </tbody>
-  </table>
-</div>
-}
+  </table> -->
