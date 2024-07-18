@@ -11,7 +11,6 @@ export class FindMajPipe implements PipeTransform {
       return '';
     } else {
       const maj = priceObject.maj;
-      console.log(maj);
       const now = Date.now();
       const msBetweenNowMaj = now - new Date(maj).getTime();
       const milliTominutes = msBetweenNowMaj / 1000 / 60;
