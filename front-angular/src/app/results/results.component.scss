@@ -1,16 +1,32 @@
-.station-container {
-  margin-bottom: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: stretch;
+// .station-container {
+//   margin-bottom: 20px;
+//   display: flex;
+//   flex-wrap: wrap;
+//   justify-content: stretch;
+//   border-bottom: grey 1px solid;
+// }
+
+// .carbu {
+//   display: flex;
+//   gap: 10px;
+// }
+
+// .carbu p {
+//   display: block;
+// }
+
+table {
+  width: 100%;
+}
+
+.card-station {
+  // display: flex;
+  // justify-content: space-between;
   border-bottom: grey 1px solid;
+  margin-bottom: 10px;
+  width: 100%;
 }
 
-.carbu {
-  display: flex;
-  gap: 10px;
-}
-
-.carbu p {
-  display: block;
+tr {
+  text-align: left;
 }

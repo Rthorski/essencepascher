@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { StationsService } from '../stations.service';
 import { FindPricePipe } from '../find-price.pipe';
 import { FindMajPipe } from '../find-maj.pipe';
@@ -10,7 +10,7 @@ import { FindMajPipe } from '../find-maj.pipe';
   styleUrl: './results.component.scss',
   imports: [FindPricePipe, FindMajPipe],
 })
-export class ResultsComponent implements OnInit {
+export class ResultsComponent implements OnInit, AfterViewInit {
   stations: any[] = [];
 
   constructor(private stationService: StationsService) {}
@@ -20,4 +20,6 @@ export class ResultsComponent implements OnInit {
       this.stations = stations;
     });
   }
+
+  ngAfterViewInit(): void {}
 }

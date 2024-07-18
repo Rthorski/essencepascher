@@ -1,11 +1,42 @@
-@for (station of stations; track station.id) {
-<div class="station-container">
-  @for (prix of station.json_prix; track prix.id) {
-  <div class="carbu">
-    <p>{{ prix.nom }}</p>
-    <p>{{ prix.valeur }}€</p>
-    <p>{{ prix.maj }}</p>
-  </div>
-  }
+@if (stations.length > 0) {
+<div class="wrap-results">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col" mat-sort-header="gazole">Gazole</th>
+        <th scope="col" mat-sort-header="sp95">SP95</th>
+        <th scope="col" mat-sort-header="e10">SP95-E10</th>
+        <th scope="col" mat-sort-header="sp98">SP98</th>
+        <th scope="col" mat-sort-header="e85">E85</th>
+        <th scope="col" mat-sort-header="gplc">GPL</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (station of stations; track station.id) {
+      <tr>
+        <th>{{ station.id }}</th>
+        <td>{{ station.json_prix | findPrice : "gazole" }}</td>
+        <td>{{ station.json_prix | findPrice : "sp95" }}</td>
+        <td>{{ station.json_prix | findPrice : "e10" }}</td>
+        <td>{{ station.json_prix | findPrice : "sp98" }}</td>
+        <td>{{ station.json_prix | findPrice : "e85" }}</td>
+        <td>{{ station.json_prix | findPrice : "gplc" }}</td>
+      </tr>
+      <tr>
+        <td>{{ station.geolocalisation[0].adresse }}</td>
+        <td>{{ station.json_prix | findMaj : "gazole" }}</td>
+        <td>{{ station.json_prix | findMaj : "sp95" }}</td>
+        <td>{{ station.json_prix | findMaj : "e10" }}</td>
+        <td>{{ station.json_prix | findMaj : "sp98" }}</td>
+        <td>{{ station.json_prix | findMaj : "e85" }}</td>
+        <td>{{ station.json_prix | findMaj : "gplc" }}</td>
+      </tr>
+      <tr>
+        <td>{{ station.geolocalisation[0].town }}</td>
+      </tr>
+      }
+    </tbody>
+  </table>
 </div>
 }
