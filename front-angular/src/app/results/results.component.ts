@@ -46,7 +46,6 @@ export class ResultsComponent implements AfterViewInit {
   ngOnInit(): void {
     this.stationService.currentStations.subscribe((stations: any[]) => {
       this.stations = stations;
-      console.log(this.stations);
       this.stationsTransform =
         this.stationService.transformToStationModel(stations);
       this.dataSource.data = this.stationsTransform;
