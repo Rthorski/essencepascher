@@ -18,11 +18,13 @@ import '@maptiler/sdk/dist/maptiler-sdk.css';
 import { StationsService } from '../stations.service';
 import { FormsModule } from '@angular/forms';
 import { ResultsComponent } from '../results/results.component';
+import maplibregl from 'maplibre-gl';
+import { SearchBoxComponent } from '../search-box/search-box.component';
 
 @Component({
   selector: 'app-map',
   standalone: true,
-  imports: [FormsModule, ResultsComponent],
+  imports: [FormsModule, ResultsComponent, SearchBoxComponent],
   templateUrl: './map.component.html',
   styleUrl: './map.component.scss',
 })
@@ -34,6 +36,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   longitude!: number;
   geolocateClicked = false;
   markers: any[] = [];
+  apiKey: string = 'LyXVuu584biw12WAl9hG';
 
   constructor(private stationService: StationsService) {}
 
@@ -60,12 +63,13 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       positionOptions: {
         enableHighAccuracy: true,
       },
-      trackUserLocation: true,
+      trackUserLocation: false,
     });
 
     this.map.addControl(geolocate);
 
     geolocate.on('geolocate', (event) => {
+      console.log('oui');
       const { latitude, longitude } = event.coords;
       this.latitude = latitude;
       this.longitude = longitude;
@@ -105,6 +109,14 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onRadiusChange() {
     this.loadNearbyStations(this.latitude, this.longitude, this.radius);
+  }
+
+  onDataChange(event: any) {
+    const { latitude, longitude } = event;
+    this.latitude = latitude;
+    this.longitude = longitude;
+    this.loadNearbyStations(latitude, longitude, this.radius);
+    this.geolocateClicked = true;
   }
 
   loadNearbyStations(

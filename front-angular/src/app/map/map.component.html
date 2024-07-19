@@ -16,6 +16,7 @@
 </div>
 <div class="container">
   <div class="map" #map></div>
+  <app-search-box (locationSelected)="onDataChange($event)" />
   <div class="results">
     <app-results />
   </div>
