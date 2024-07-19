@@ -18,7 +18,6 @@ import '@maptiler/sdk/dist/maptiler-sdk.css';
 import { StationsService } from '../stations.service';
 import { FormsModule } from '@angular/forms';
 import { ResultsComponent } from '../results/results.component';
-import maplibregl from 'maplibre-gl';
 import { SearchBoxComponent } from '../search-box/search-box.component';
 
 @Component({
@@ -69,7 +68,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.map.addControl(geolocate);
 
     geolocate.on('geolocate', (event) => {
-      console.log('oui');
       const { latitude, longitude } = event.coords;
       this.latitude = latitude;
       this.longitude = longitude;

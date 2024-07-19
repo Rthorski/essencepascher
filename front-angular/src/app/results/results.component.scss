@@ -1,36 +1,26 @@
-// .station-container {
-//   margin-bottom: 20px;
-//   display: flex;
-//   flex-wrap: wrap;
-//   justify-content: stretch;
-//   border-bottom: grey 1px solid;
-// }
-
-// .carbu {
-//   display: flex;
-//   gap: 10px;
-// }
-
-// .carbu p {
-//   display: block;
-// }
-
-table {
+.styled-table {
+  border-collapse: collapse;
+  text-align: left;
   width: 100%;
 }
 
-.card-station {
-  // display: flex;
-  // justify-content: space-between;
-  border-bottom: grey 1px solid;
-  margin-bottom: 10px;
-  width: 100%;
-}
-
-tr {
+.styled-table th,
+.styled-table td {
+  padding: 12px 15px;
   text-align: left;
 }
 
-th.mat-sort-header-sorted {
-  color: black;
+.styled-table th {
+  font-weight: bold;
+}
+
+.results-town,
+.results-adresse {
+  text-transform: capitalize;
+}
+
+.results-id,
+.results-adresse,
+.results-town {
+  margin-bottom: 2px; /* Add space between each station detail */
 }

@@ -1,11 +1,10 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe, DecimalPipe } from '@angular/common';
 import { StationsService } from '../stations.service';
 import { FindPricePipe } from '../find-price.pipe';
 import { FindMajPipe } from '../find-maj.pipe';
-import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { Station } from '../models/station';
 
 @Component({
@@ -19,9 +18,11 @@ import { Station } from '../models/station';
     MatSortModule,
     MatTableModule,
     CommonModule,
+    CurrencyPipe,
+    DecimalPipe,
   ],
 })
-export class ResultsComponent implements AfterViewInit {
+export class ResultsComponent implements AfterViewInit, OnInit {
   stations: any[] = [];
   stationsTransform: Station[] = [];
   displayedColumns: string[] = [
@@ -33,18 +34,24 @@ export class ResultsComponent implements AfterViewInit {
     'e85',
     'gplc',
   ];
+
+  fuelColumns = [
+    { key: 'gazole', label: 'Gazole' },
+    { key: 'sp95', label: 'SP95' },
+    { key: 'e10', label: 'E10' },
+    { key: 'sp98', label: 'SP98' },
+    { key: 'e85', label: 'E85' },
+    { key: 'gplc', label: 'GPLC' },
+  ];
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild(MatSort) sort!: MatSort;
-  constructor(
-    private stationService: StationsService,
-    private _liveAnnouncer: LiveAnnouncer
-  ) {
+  constructor(private stationService: StationsService) {
     this.dataSource = new MatTableDataSource();
   }
 
   ngOnInit(): void {
-    this.stationService.currentStations.subscribe((stations: any[]) => {
+    this.stationService.stations$.subscribe((stations: any[]) => {
       this.stations = stations;
       this.stationsTransform =
         this.stationService.transformToStationModel(stations);
