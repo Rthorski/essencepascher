@@ -13,6 +13,7 @@ import {
   Marker,
   GeolocateControl,
   LngLatBounds,
+  Popup,
 } from '@maptiler/sdk';
 import '@maptiler/sdk/dist/maptiler-sdk.css';
 import { StationsService } from '../stations.service';
@@ -36,6 +37,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   geolocateClicked = false;
   markers: any[] = [];
   apiKey: string = 'LyXVuu584biw12WAl9hG';
+  specialMarker!: any;
 
   constructor(private stationService: StationsService) {}
 
@@ -68,6 +70,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.map.addControl(geolocate);
 
     geolocate.on('geolocate', (event) => {
+      if (this.specialMarker) {
+        this.specialMarker.remove();
+        this.specialMarker = undefined;
+      }
+
       const { latitude, longitude } = event.coords;
       this.latitude = latitude;
       this.longitude = longitude;
@@ -93,14 +100,26 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   fitMapToBounds(): void {
-    if (this.stations.length > 0) {
-      const bounds = new LngLatBounds();
-      this.stations.forEach((station) => {
-        bounds.extend([
-          station.geolocalisation[0].longitude,
-          station.geolocalisation[0].latitude,
-        ]);
-      });
+    const coordinates = this.stations.map((station) => [
+      station.geolocalisation[0].longitude,
+      station.geolocalisation[0].latitude,
+    ]);
+    if (this.specialMarker) {
+      const specialMarkerCoordinates = this.specialMarker.getLngLat();
+      coordinates.push([
+        specialMarkerCoordinates.lng,
+        specialMarkerCoordinates.lat,
+      ]);
+    }
+
+    if (coordinates.length > 0) {
+      const bounds = coordinates.reduce(function (bounds, coord) {
+        return bounds.extend(coord as [number, number]);
+      }, new LngLatBounds(
+        coordinates[0] as [number, number],
+        coordinates[0] as [number, number]
+      ));
+
       this.map?.fitBounds(bounds, { padding: 80, duration: 1500 });
     }
   }
@@ -114,7 +133,26 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.latitude = latitude;
     this.longitude = longitude;
     this.loadNearbyStations(latitude, longitude, this.radius);
+    this.addSearchedAdressMarker(latitude, longitude);
     this.geolocateClicked = true;
+  }
+
+  addSearchedAdressMarker(latitude: number, longitude: number): void {
+    if (this.specialMarker) {
+      this.specialMarker.remove();
+      this.specialMarker = undefined;
+    }
+
+    const el = document.createElement('div');
+    el.className = 'marker';
+    el.style.backgroundImage =
+      'url(location_on_40dp_5F6368_FILL0_wght400_GRAD0_opsz40.svg)';
+    el.style.width = '40px';
+    el.style.height = '40px';
+
+    this.specialMarker = new Marker({ element: el })
+      .setLngLat([longitude, latitude])
+      .addTo(this.map!);
   }
 
   loadNearbyStations(
