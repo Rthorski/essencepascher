@@ -1,4 +1,10 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule, CurrencyPipe, DecimalPipe } from '@angular/common';
 import { StationsService } from '../stations.service';
 import { FindPricePipe } from '../find-price.pipe';
@@ -23,7 +29,9 @@ import { Station } from '../models/station';
   ],
 })
 export class ResultsComponent implements AfterViewInit, OnInit {
+  @Input() geoClicked!: boolean;
   stations: any[] = [];
+  test: boolean = true;
   stationsTransform: Station[] = [];
   displayedColumns: string[] = [
     'id',
@@ -38,7 +46,7 @@ export class ResultsComponent implements AfterViewInit, OnInit {
   fuelColumns = [
     { key: 'gazole', label: 'Gazole' },
     { key: 'sp95', label: 'SP95' },
-    { key: 'e10', label: 'E10' },
+    { key: 'e10', label: 'SP95-E10' },
     { key: 'sp98', label: 'SP98' },
     { key: 'e85', label: 'E85' },
     { key: 'gplc', label: 'GPLC' },

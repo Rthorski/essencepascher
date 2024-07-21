@@ -121,6 +121,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       ));
 
       this.map?.fitBounds(bounds, { padding: 80, duration: 1500 });
+      if (this.stations.length < 1) {
+        alert('Aucune station-essence trouvée, veuillez augmenter le rayon');
+      }
     }
   }
 

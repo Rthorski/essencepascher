@@ -1,4 +1,10 @@
-<table mat-table [dataSource]="dataSource" matSort class="styled-table">
+<table
+  mat-table
+  [dataSource]="dataSource"
+  matSort
+  class="styled-table"
+  [hidden]="!geoClicked"
+>
   <ng-container matColumnDef="id">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Stations</th>
     <td mat-cell *matCellDef="let element">
