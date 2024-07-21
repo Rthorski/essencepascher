@@ -1,33 +1,47 @@
 .container {
   display: flex;
-  height: calc(100vh - 77px);
+  height: calc(100vh - 60px);
+  position: relative;
 }
 
 .map {
-  border-radius: 5px;
   flex: 1;
-  height: 100vh;
-  width: 50%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.app-search-box {
+  position: absolute;
+  top: 10px;
+  left: 25%;
+  transform: translateX(-50%, -50%);
+}
+
+.right {
+  flex: 1;
+  overflow-y: auto;
+  position: relative;
+}
+
+.filter {
+  position: absolute;
+  left: 10px;
+  z-index: 1000;
 }
 
 .results {
-  flex: 1.5;
-  max-height: 800px;
-  overflow-y: auto;
+  padding: 10px;
 }
 
 .filter-rayon {
   padding: 10px;
 }
 
-.filter-rayon button {
-  padding: 5px;
-}
-
 .filter-rayon input {
   border-radius: 5px;
   text-align: center;
-  padding: 5px;
   margin-right: 10px;
 }
 

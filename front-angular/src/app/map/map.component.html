@@ -1,23 +1,27 @@
-<div class="filter">
-  @if (geolocateClicked) {
-  <div class="filter-rayon">
-    <label for="radius">Rayon (en kilomètres entre 1 et 50) :</label>
-    <input
-      min="1"
-      max="50"
-      type="number"
-      id="radius"
-      [(ngModel)]="radius"
-      (keyup.enter)="onRadiusChange()"
-    />
-    <button (click)="onRadiusChange()">OK</button>
-  </div>
-  }
-</div>
 <div class="container">
   <div class="map" #map></div>
-  <app-search-box (locationSelected)="onDataChange($event)" />
-  <div class="results">
-    <app-results />
+  <app-search-box
+    (locationSelected)="onDataChange($event)"
+    class="app-search-box"
+  />
+
+  <div class="right">
+    <div class="filter">
+      @if (geolocateClicked) {
+      <div class="filter-rayon">
+        <label for="radius">Rayon (en kilomètres entre 1 et 50) :</label>
+        <input
+          min="1"
+          max="50"
+          type="number"
+          id="radius"
+          [(ngModel)]="radius"
+          (keyup.enter)="onRadiusChange()"
+        />
+        <button (click)="onRadiusChange()">OK</button>
+      </div>
+      }
+    </div>
+    <app-results class="results" />
   </div>
 </div>

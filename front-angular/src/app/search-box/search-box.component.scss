@@ -1,9 +1,12 @@
 input {
   position: absolute;
-  transform: translateX(-100%);
+  top: 20px;
+  left: 50%;
+  transform: translate(-50%, -50%);
   padding: 10px;
   border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  width: 20%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
   opacity: 0.7;
+  width: 400px;
+  text-align: center;
 }
