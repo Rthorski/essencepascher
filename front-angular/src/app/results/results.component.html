@@ -9,7 +9,7 @@
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Stations</th>
     <td mat-cell *matCellDef="let element">
       <div class="station-container">
-        <div class="results-id">{{ element.id }}</div>
+        <div class="results-name">{{ element.name }}</div>
         <div class="results-adresse">{{ element.adresse }}</div>
         <div class="results-town">{{ element.town }}</div>
       </div>
@@ -17,7 +17,7 @@
   </ng-container>
 
   <ng-container
-    *ngFor="let column of fuelColumns"
+    *ngFor="let column of fuelColumnsFiltered"
     [matColumnDef]="column.key"
     class="fuel-column"
   >
@@ -25,24 +25,31 @@
       {{ column.label }}
     </th>
     <td mat-cell *matCellDef="let element">
-      <div
-        class="results-valeur"
-        *ngIf="
-          element[column.key]?.valeur !== null &&
-            element[column.key]?.valeur !== undefined;
-          else elseBlock
-        "
-      >
-        {{
-          element[column.key].valeur
-            | number : "1.3-3"
-            | currency : "EUR" : "symbol" : "1.3-3"
-        }}
+      <div class="test">
+        <div
+          class="results-valeur"
+          *ngIf="
+            element[column.key]?.valeur !== null &&
+              element[column.key]?.valeur !== undefined;
+            else elseBlock
+          "
+        >
+          {{
+            element[column.key]?.valeur
+              | number : "1.3-3"
+              | currency : "EUR" : "symbol" : "1.3-3"
+          }}
+        </div>
+        <div
+          class="results-maj"
+          [innerHTML]="element[column.key] | findMaj : element[column.key]"
+        ></div>
+
+        <ng-template #elseBlock></ng-template>
       </div>
-      <ng-template #elseBlock></ng-template>
     </td>
   </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  <tr mat-header-row *matHeaderRowDef="displayedColumnsFiltered"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumnsFiltered"></tr>
 </table>

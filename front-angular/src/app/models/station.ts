@@ -1,5 +1,6 @@
 export interface Station {
   id: number;
+  name: string;
   pop: string;
   town: string;
   adresse: string;

@@ -1,26 +1,49 @@
 .styled-table {
-  border-collapse: collapse;
-  text-align: left;
   width: 100%;
 }
 
-.styled-table th,
-.styled-table td {
-  padding: 12px 15px;
-  text-align: left;
+::ng-deep .mat-column-id {
+  width: 300px;
 }
 
 .styled-table th {
   font-weight: bold;
 }
 
+.styled-table td {
+  text-align: left;
+}
+
 .results-town,
 .results-adresse {
   text-transform: capitalize;
+  font-size: 12px;
 }
 
-.results-id,
 .results-adresse,
-.results-town {
-  margin-bottom: 2px; /* Add space between each station detail */
+.results-town,
+.results-name,
+.results-maj,
+.results-valeur {
+  margin-bottom: 3px;
+}
+
+.results-name {
+  text-transform: capitalize;
+  font-weight: bold;
+}
+
+.results-maj,
+.wrap-maj {
+  font-size: 10px;
+  text-align: left;
+}
+
+.test {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+}
+.results-valeur {
+  display: block;
 }

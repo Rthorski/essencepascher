@@ -2,7 +2,9 @@
 
 with stations as (
   select *
-  from {{ ref('stg_staging_stations') }}
+  from {{ ref('stg_staging_stations') }} as ss
+  LEFT join {{ source('staging', 'stations_name') }} as sn 
+  on ss.id = sn.station_id
 ),
 
 ruptures as (
@@ -74,6 +76,7 @@ horaires as (
 all_tables as (
   select 
     s.id,
+    s.name,
     s.geolocalisation,
     f.json_fermetures,
     p.json_prix,
@@ -86,6 +89,7 @@ all_tables as (
   left join services as se on se.station_id = s.id
   left join horaires as h on h.station_id = s.id
   left join ruptures as r on r.station_id = s.id
+  where p.json_prix NOTNULL
 ) 
 
 select *
