@@ -51,5 +51,10 @@
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumnsFiltered"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumnsFiltered"></tr>
+  <tr
+    mat-row
+    *matRowDef="let row; columns: displayedColumnsFiltered"
+    (mouseover)="onMouseOver($event, row)"
+    (mouseout)="onMouseOut($event)"
+  ></tr>
 </table>

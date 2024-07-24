@@ -1,8 +1,10 @@
 import {
   AfterViewInit,
   Component,
+  EventEmitter,
   Input,
   OnInit,
+  Output,
   ViewChild,
 } from '@angular/core';
 import { CommonModule, CurrencyPipe, DecimalPipe } from '@angular/common';
@@ -31,6 +33,9 @@ import { forkJoin, switchMap, map, concatMap, tap, catchError, of } from 'rxjs';
 })
 export class ResultsComponent implements AfterViewInit, OnInit {
   @Input() geoClicked!: boolean;
+  @Output() stationOver: EventEmitter<any> = new EventEmitter();
+  @Output() stationOut: EventEmitter<any> = new EventEmitter();
+
   stations: any[] = [];
   test: boolean = true;
   stationsWithNames: any[] = [];
@@ -162,6 +167,14 @@ export class ResultsComponent implements AfterViewInit, OnInit {
           }
         };
       });
+  }
+  onMouseOver(event: MouseEvent, row): void {
+    const rowOver = { lat: row.latitude, lon: row.longitude };
+    this.stationOver.emit(rowOver);
+  }
+
+  onMouseOut(event: MouseEvent): void {
+    this.stationOut.emit(event);
   }
 
   ngAfterViewInit(): void {

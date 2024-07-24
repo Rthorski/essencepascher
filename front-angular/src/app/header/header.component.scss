@@ -24,3 +24,15 @@
   justify-content: center;
   align-items: center;
 }
+li {
+  cursor: pointer;
+  box-shadow: #fff 0px 0px 10px 2px;
+  border: white 1px solid;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+li:hover {
+  background-color: #fff;
+  color: #000d2d;
+}

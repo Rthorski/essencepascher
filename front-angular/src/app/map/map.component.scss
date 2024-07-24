@@ -23,20 +23,24 @@
   flex: 1.5;
   overflow-y: auto;
   position: relative;
-}
-
-.filter {
-  position: absolute;
-  left: 10px;
-  z-index: 1000;
-}
-
-.results {
+  display: flex;
+  flex-direction: column;
   padding: 10px;
+}
+
+.filters {
+  display: flex;
+  gap: 10px;
 }
 
 .filter-rayon {
-  padding: 10px;
+  // position: absolute;
+  // left: 10px;
+  // z-index: 1000;
+  padding: 16px;
+  border: gray 1px solid;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+  border-radius: 5px;
 }
 
 .filter-rayon input {
@@ -47,4 +51,5 @@
 
 .filter-rayon label {
   margin-right: 10px;
+  font-size: 12px;
 }

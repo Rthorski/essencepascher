@@ -5,11 +5,11 @@
     class="app-search-box"
   />
 
+  @if (geolocateClicked) {
   <div class="right">
-    <div class="filter">
-      @if (geolocateClicked) {
+    <div class="filters">
       <div class="filter-rayon">
-        <label for="radius">Rayon (en kilomètres entre 1 et 50) :</label>
+        <label for="radius">Rayon (en kilomètres entre 1 et 50):</label>
         <input
           min="1"
           max="50"
@@ -20,8 +20,17 @@
         />
         <button (click)="onRadiusChange()">OK</button>
       </div>
-      }
+      <div class="filter-fuel">
+        <label for="fuel">Choix du carburant</label>
+        input:
+      </div>
     </div>
-    <app-results class="results" [geoClicked]="geolocateClicked" />
+    <app-results
+      class="results"
+      [geoClicked]="geolocateClicked"
+      (stationOver)="onStationOver($event)"
+      (stationOut)="onStationOut($event)"
+    />
   </div>
+  }
 </div>

@@ -38,6 +38,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   markers: any[] = [];
   apiKey: string = 'LyXVuu584biw12WAl9hG';
   specialMarker!: any;
+  markerStationOver!: Marker | undefined;
 
   constructor(private stationService: StationsService) {}
 
@@ -138,6 +139,23 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadNearbyStations(latitude, longitude, this.radius);
     this.addSearchedAdressMarker(latitude, longitude);
     this.geolocateClicked = true;
+  }
+
+  onStationOver(event: any) {
+    const { lat, lon } = event;
+    this.markers.forEach((marker) => {
+      marker.remove();
+      this.markerStationOver?.remove();
+      this.markerStationOver = new Marker();
+      this.markerStationOver?.setLngLat([lon, lat]).addTo(this.map!);
+    });
+  }
+
+  onStationOut(event: any) {
+    this.markerStationOver?.remove();
+    this.markers.forEach((marker) => {
+      marker.addTo(this.map!);
+    });
   }
 
   addSearchedAdressMarker(latitude: number, longitude: number): void {
