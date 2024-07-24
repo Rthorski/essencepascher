@@ -6,6 +6,7 @@ export interface Station {
   adresse: string;
   latitude: number;
   longitude: number;
+  distance: number;
   gazole: {
     id: number;
     maj: Date;

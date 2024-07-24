@@ -12,6 +12,10 @@
         <div class="results-name">{{ element.name }}</div>
         <div class="results-adresse">{{ element.adresse }}</div>
         <div class="results-town">{{ element.town }}</div>
+        <div class="results-distance">
+          📍 {{ element.distance | number : "1.1-2" }}
+          {{ element.distance > 1 ? "kms" : "km" }}
+        </div>
       </div>
     </td>
   </ng-container>

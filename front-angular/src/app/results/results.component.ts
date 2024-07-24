@@ -33,6 +33,9 @@ import { forkJoin, switchMap, map, concatMap, tap, catchError, of } from 'rxjs';
 })
 export class ResultsComponent implements AfterViewInit, OnInit {
   @Input() geoClicked!: boolean;
+  @Input() latitude!: number;
+  @Input() longitude!: number;
+
   @Output() stationOver: EventEmitter<any> = new EventEmitter();
   @Output() stationOut: EventEmitter<any> = new EventEmitter();
 
@@ -100,6 +103,15 @@ export class ResultsComponent implements AfterViewInit, OnInit {
         this.stationsTransform = this.stationService.transformToStationModel(
           this.stationsWithNames
         );
+        this.stationsTransform.forEach((station) => {
+          station.distance = this.calculeDistance(
+            this.latitude,
+            this.longitude,
+            station.latitude,
+            station.longitude
+          );
+        });
+        console.log(this.stationsTransform);
         this.dataSource.data = this.stationsTransform;
         this.fuelColumnsFiltered = this.fuelColumns
           .slice()
@@ -175,6 +187,30 @@ export class ResultsComponent implements AfterViewInit, OnInit {
 
   onMouseOut(event: MouseEvent): void {
     this.stationOut.emit(event);
+  }
+
+  deg2rad(deg: number): number {
+    return deg * (Math.PI / 180);
+  }
+
+  calculeDistance(
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number
+  ): number {
+    const R = 6371; // Radius of the earth in km
+    const dLat = this.deg2rad(lat2 - lat1); // deg2rad below
+    const dLon = this.deg2rad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.deg2rad(lat1)) *
+        Math.cos(this.deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const d = R * c; // Distance in km
+    return d;
   }
 
   ngAfterViewInit(): void {

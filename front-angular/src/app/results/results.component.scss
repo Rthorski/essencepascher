@@ -19,6 +19,10 @@
   background-color: rgb(232, 234, 237);
 }
 
+.results-distance {
+  font-size: 10px;
+}
+
 .results-town,
 .results-adresse {
   text-transform: capitalize;
@@ -29,13 +33,15 @@
 .results-town,
 .results-name,
 .results-maj,
-.results-valeur {
+.results-valeur,
+.results-distance {
   margin-bottom: 3px;
 }
 
 .results-name {
   text-transform: capitalize;
-  font-weight: bold;
+  color: blue;
+  font-size: 12px;
 }
 
 .results-maj,
