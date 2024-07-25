@@ -1,5 +1,6 @@
 .styled-table {
   width: 100%;
+  box-shadow: lightgray 4px 4px 20px;
 }
 
 ::ng-deep .mat-column-id {
@@ -42,6 +43,7 @@
   text-transform: capitalize;
   color: blue;
   font-size: 12px;
+  margin-top: 10px;
 }
 
 .results-maj,
