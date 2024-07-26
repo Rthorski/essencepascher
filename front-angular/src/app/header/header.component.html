@@ -1,8 +1,13 @@
 <div class="heading">
   <p class="essencepascher">essencepascher.</p>
   <div class="navbar">
-    @for (header of headers; track header) {
-    <li>{{ header }}</li>
-    }
+    <ul>
+      <li>
+        <a routerLink="/">home</a>
+      </li>
+      <li>
+        <a [routerLink]="['/charts']">charts</a>
+      </li>
+    </ul>
   </div>
 </div>

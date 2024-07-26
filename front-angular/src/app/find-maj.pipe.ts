@@ -14,19 +14,19 @@ export class FindMajPipe implements PipeTransform {
       const msBetweenNowMaj = now - new Date(maj).getTime();
       const milliTominutes = msBetweenNowMaj / 1000 / 60;
       if (milliTominutes < 60) {
-        return `⏱️ ${Math.round(milliTominutes)} minutes`;
+        return `🕦 ${Math.round(milliTominutes)} minutes`;
       }
       if (milliTominutes < 1440) {
-        return `⏱️ ${Math.round(milliTominutes / 60)} ${
+        return `🕦 ${Math.round(milliTominutes / 60)} ${
           Math.round(milliTominutes / 60) === 1 ? 'heure' : 'heures'
         }`;
       }
       if (milliTominutes < 10080) {
-        return `⏱️ ${Math.round(milliTominutes / 60 / 24)} ${
+        return `🕦 ${Math.round(milliTominutes / 60 / 24)} ${
           Math.round(milliTominutes / 60 / 24) === 1 ? 'jour' : 'jours'
         }`;
       }
-      return `⏱️ ${Math.round(milliTominutes / 60 / 24 / 7)} ${
+      return `🕦 ${Math.round(milliTominutes / 60 / 24 / 7)} ${
         Math.round(milliTominutes / 60 / 24 / 7) === 1 ? 'semaine' : 'semaines'
       }`;
     }
