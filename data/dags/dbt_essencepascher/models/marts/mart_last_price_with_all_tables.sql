@@ -1,20 +1,20 @@
-{{ config (materialized='table')}}
+{{ config (materialized='table') }}
 
 with stations as (
   select *
-  from {{ ref('stg_staging_stations') }} as ss
+  from "essencepascher_db"."staging"."stg_staging_stations" as ss
   LEFT join {{ source('staging', 'stations_name') }} as sn 
-  on ss.id = sn.station_id
+  on ss.id = sn.station_id::int
 ),
 
 ruptures as (
   select *
-  from {{ ref('stg_staging_ruptures') }}
+  from "essencepascher_db"."staging"."stg_staging_ruptures"
 ),
 
 fermetures as (
   select *
-  from {{ ref('stg_staging_fermetures') }}
+  from "essencepascher_db"."staging"."stg_staging_fermetures"
 ),
 
 fermetures_without_definitive as (
@@ -38,7 +38,7 @@ fermetures_final as (
 prix as (
   select *,
   ROW_NUMBER () OVER (PARTITION BY station_id, id ORDER BY station_id, id, maj desc) as last_price_rank
-  from {{ ref('stg_staging_prix') }}
+  from "essencepascher_db"."staging"."stg_staging_prix"
 ),
 
 prix_with_last_price as (
@@ -64,12 +64,12 @@ prix_final as (
 
 services as (
   select *
-  from {{ ref('stg_staging_services') }}
+  from "essencepascher_db"."staging"."stg_staging_services"
 ),
 
 horaires as (
   select *
-  from {{ ref('stg_staging_horaires') }}
+  from "essencepascher_db"."staging"."stg_staging_horaires"
 ),
 
 
