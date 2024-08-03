@@ -15,19 +15,22 @@ def load_tables_in_database(list_of_dict, date_ti, process_id):
     for name, dict_df in couple_of_attributs.items():
       
       if name == 'prix':
-        load_prix_table(dict_df, name, process_id, date_ti)
+        translate_name = 'prices'
+        load_prix_table(dict_df, translate_name, process_id, date_ti)
         
       if name == 'stations':
         load_stations_table(dict_df, name, date_ti)
 
       elif name == 'services':
-        load_services_and_horaires_and_stations_table(dict_df, name)
+        load_services_and_horaires_table(dict_df, name)
         
       elif name == 'horaires':
-        load_services_and_horaires_and_stations_table(dict_df, name)
+        translate_name = 'opening_hours'
+        load_services_and_horaires_table(dict_df, translate_name)
         
       elif name == 'ruptures':
-        load_ruptures_table(dict_df, name)
+        translate_name = 'shortages'
+        load_ruptures_table(dict_df, translate_name)
 
 
 
@@ -86,18 +89,28 @@ def load_prix_table(dict_df, name, process_id, date_ti):
   year_month, where_condition = stg_query_where_year_is(date_ti)
   df_data_entry = stg_get_uniques_values_data_entry(dict_df, year_month)
 
-  columns = ('nom, id, maj, valeur, station_id, year, year_month')
+  columns = ('name, id, fuel_updated_at, value, station_id, year, year_month')
+  
+  columns_to_rename = {
+    'nom': 'name',
+    'id': 'id',
+    'maj': 'fuel_updated_at',
+    'valeur': 'value',
+    'station_id': 'station_id',
+    'year': 'year',
+    'year_month': 'year_month'
+  }
   
   dtype = {
-    'nom': 'object',
+    'name': 'object',
     'id': 'object',
-    'valeur': 'object',
+    'value': 'object',
     'station_id': 'object',
     'year': 'int',
     'year_month': 'str',
   }
   
-  parse_dates = 'maj'
+  parse_dates = 'fuel_updated_at'
   
   df_table_prix = stg_get_table_with_where_condition(columns=columns, name=name, dtype=dtype, where_condition=where_condition, parse_dates=parse_dates)
 
@@ -112,12 +125,13 @@ def load_prix_table(dict_df, name, process_id, date_ti):
     df["id_station"] = pd.to_numeric(df["id_station"], downcast='integer')
     news_rows = news_rows.merge(df, how='inner', left_on='station_id', right_on='id_station')
     news_rows = news_rows[['nom', 'id', 'maj', 'valeur', 'station_id', 'injected_at', 'year', 'process_id', 'year_month']]
+    news_rows.rename(columns=columns_to_rename, inplace=True)
 
     print("nouveaux prix", news_rows.shape)
     print("début injection nouvelles lignes")
     try:
       news_rows.to_sql(
-        name="prix",
+        name=name,
         con=engine,
         schema='dev',
         if_exists='append',
@@ -130,18 +144,38 @@ def load_prix_table(dict_df, name, process_id, date_ti):
         raise e
   else:
     print("pas de tarifs à jour")
+  
+  
+def rename_columns(df, dict_rename):
+  
+  df = df.rename(columns=dict_rename)
+  
+  return df
 
 
-def load_services_and_horaires_and_stations_table(dict_df, name):
+def load_services_and_horaires_table(dict_df, name):
   
   df = pd.DataFrame(dict_df)
+  
+  rename_columns_opening_hours = {
+    "id": "day_id",
+    "nom": "day",
+    "ferme": "is_closed",
+    "station_id": "station_id",
+    "ouverture": "opening_time",
+    "fermeture": "closing_time"
+  }
+  
+  if name == "opening_hours":
     
-  if name != 'stations':
-    df["station_id"] = pd.to_numeric(df["station_id"], downcast='integer')
-    df_stations = get_all_stations()
-    df = df.merge(df_stations, how='inner', left_on='station_id', right_on='id_station')
-    df.drop(columns=['id_station'], inplace=True)
+    df.rename(columns=rename_columns_opening_hours, inplace=True)
+    
 
+  df["station_id"] = pd.to_numeric(df["station_id"], downcast='integer')
+  df_stations = get_all_stations()
+  df = df.merge(df_stations, how='inner', left_on='station_id', right_on='id_station')
+  df.drop(columns=['id_station'], inplace=True)
+  
   try:
     with conn_psycopg2 as conn:
       with conn.cursor() as cur:
@@ -169,31 +203,39 @@ def load_stations_table(dict_df, name, date_ti):
   date_ti_timzeone_europe_paris = get_date_ti_in_timezone_europe_paris(date_ti)
   str_date_ti_timzeone_europe_paris = date_ti_timzeone_europe_paris.strftime("%Y-%m-%dT%H:%M:%S%z")
 
-  columns = ('id, latitude, longitude, cp, pop, adresse, ville')
+  columns = ('id, latitude, longitude, postal_code, population, address, city')
+  
+  columns_to_rename = {
+    'id': 'id',
+    'latitude': 'latitude',
+    'longitude': 'longitude',
+    'cp': 'postal_code',
+    'pop': 'population',
+    'adresse': 'address',
+    'ville': 'city'
+  }
   
   dtype = {
     'id': 'int',
     'latitude': 'object',
     'longitude': 'object',
-    'cp': 'object',
-    'pop': 'object',
-    'adresse': 'object',
-    'ville': 'object'
+    'postal_code': 'object',
+    'population': 'object',
+    'address': 'object',
+    'city': 'object'
   }
   
   df_table_stations = get_table_to_dataframe(columns=columns, name=name, dtype=dtype)
-  # date_max_of_scheduling = str(df_table_stations["date_of_scheduling"].max())
-  # df_table_stations.drop(columns=['date_of_scheduling'], inplace=True)
-  
 
   df_entry_data = read_data_entry(dict_df=dict_df)
   
+  df_entry_data.rename(columns=columns_to_rename, inplace=True)
   df_entry_data = get_entry_data(df=df_entry_data, dtype=dtype)
+
 
   news_rows = search_new_or_updated_rows(df_table=df_table_stations,
                                         df_entry_data=df_entry_data)
   
-  # news_rows["date_of_scheduling"] = str_date_ti_timzeone_europe_paris
   insert_and_update_rows(news_rows, name, primary_key='id')
 
 
@@ -218,13 +260,22 @@ def insert_and_update_rows(df, name, primary_key):
 
 def load_ruptures_table(dict_df, name):
   
-  columns = ('nom, id, debut, fin, type, station_id, concatened_id')
+  columns = ('fuel_name, fuel_id, start_shortage, end_shortage, type, station_id, concatened_id')
+  
+  columns_to_rename = {
+    'nom': 'fuel_name',
+    'id': 'fuel_id',
+    'debut': 'start_shortage',
+    'fin': 'end_shortage',
+    'type': 'type',
+    'station_id': 'station_id'
+  }
   
   dtype = {
-    'nom': 'object',
-    'id': 'object',
-    'debut': 'object',
-    'fin': 'object',
+    'fuel_name': 'object',
+    'fuel_id': 'object',
+    'start_shortage': 'object',
+    'end_shortage': 'object',
     'type': 'object',
     'station_id': 'object',
     'concatened_id': 'object'
@@ -239,19 +290,48 @@ def load_ruptures_table(dict_df, name):
   if 'type' not in df_entry_data:
     d_type_ruptures.pop('type')
   
+  df_entry_data.rename(columns=columns_to_rename, inplace=True)
   df_entry_data = get_entry_data(df=df_entry_data, dtype=d_type_ruptures)
+  df_entry_data.loc[df_entry_data["end_shortage"] == '', "end_shortage"] = None
+
   df_ruptures = concatenate_primary_key(df_entry_data)
+  
+  tuple_concatened_id = get_fuel_not_in_shortages(df_ruptures, df_table_rupture)
+  
+
   news_rows = search_new_or_updated_rows(df_table=df_table_rupture,
                                          df_entry_data=df_ruptures)
   
-  news_rows = news_rows[['nom', 'id', 'debut', 'fin', 'type', 'station_id', 'injected_at', 'concatened_id']]
-  print(f"taille de la table ruptures: {df_table_rupture.shape}")
-  print(f"taille des données entrantes: {df_entry_data.shape}")
   print(f"nouvelles lignes ou à update dans la table ruptures: {news_rows.shape}")
+  update_end_shortage(tuple_concatened_id)
 
   insert_and_update_rows(news_rows, name, primary_key="concatened_id")
-    
 
+def get_fuel_not_in_shortages(df_ruptures, df_table_rupture):
+  tuple_concatened_id = df_ruptures.merge(df_table_rupture, on='concatened_id', indicator=True, how="outer", suffixes=('_entry', '_table'))
+  tuple_concatened_id = tuple_concatened_id.loc[tuple_concatened_id["_merge"] == "right_only"]
+  tuple_concatened_id = tuple_concatened_id["concatened_id"].to_list()
+  return tuple(tuple_concatened_id)
+
+def update_end_shortage(tuple_concatened_id):
+  
+  query_update_end_shortage = """
+  UPDATE dev.shortages
+  SET end_shortage = now()
+  WHERE concatened_id IN {}
+  AND end_shortage IS NULL
+  """.format(tuple_concatened_id)
+  
+  try:
+    with psycopg.connect(conn_psycopg) as conn:
+      with conn.cursor() as cur:
+        cur.execute("SET TIME ZONE 'Europe/Paris'")
+        cur.execute(query_update_end_shortage)
+  except Exception as e:
+    print(f"Erreur lors de la mise à jour des ruptures: {e}")
+    raise e
+  else:
+    print("Les dates de fin de rupture ont été mises à jour")
 
 def insert_into_table(df, name):
   
@@ -391,6 +471,6 @@ def stg_query_where_year_is(date_ti):
     
 def concatenate_primary_key(df):
   
-  df['concatened_id'] = df['id'] + "-" + df['debut'] + "-" + df['station_id']
+  df['concatened_id'] = df['fuel_id'] + "-" + df['start_shortage'] + "-" + df['station_id']
   
   return df

@@ -13,7 +13,7 @@ def create_dataframes(root):
         if child.attrib:
           fermetures.append({**child.attrib, **station_id_dict})   
          
-  return [{"fermetures": fermetures}]
+  return [{"gas_station_closures": fermetures}]
 
 
 def get_dict_fermetures(list_of_dict):
@@ -27,17 +27,23 @@ def get_dict_fermetures(list_of_dict):
 
 def set_columns_and_dtypes():
   
-  columns = ('type, debut, fin, station_id, concatened_id')
+  columns = ('type, start_closure, end_closure, station_id, concatened_id')
   
   dtype = {
+    'type': 'object',
+    'start_closure': 'object',
+    'end_closure': 'object',
+    'station_id': 'object',
+    'concatened_id': 'object'
+  }
+  
+  d_type_fermetures = {
     'type': 'object',
     'debut': 'object',
     'fin': 'object',
     'station_id': 'object',
     'concatened_id': 'object'
   }
-  
-  d_type_fermetures = dtype.copy()
   
   d_type_fermetures.pop('concatened_id')
   
@@ -59,7 +65,7 @@ def load_if_news_rows_is_true(news_rows, name):
 
 def concatenate_primary_key(df):
   
-  df['concatened_id'] = df['type'] + "-" + df['debut'] + "-" + df['station_id']
+  df['concatened_id'] = df['type'] + "-" + df['start_closure'] + "-" + df['station_id']
   
   return df
 
