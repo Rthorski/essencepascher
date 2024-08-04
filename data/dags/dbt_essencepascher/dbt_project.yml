@@ -17,11 +17,12 @@ test-paths: ["tests"]
 seed-paths: ["seeds"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
+target-path: "target"
+clean-targets: ["target"]
 
-clean-targets: # directories to be removed by `dbt clean`
-  - "target"
-  - "dbt_packages"
-
+# clean-targets: # directories to be removed by `dbt clean`
+#   - "target"
+#   - "dbt_packages"
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
 
@@ -30,4 +31,8 @@ clean-targets: # directories to be removed by `dbt clean`
 # files using the `{{ config(...) }}` macro.
 models:
   dbt_essencepascher:
-    # Config indicated by + and applies to all files under models/example/
+  staging:
+    +schema: staging
+  marts:
+    +schema: marts
+# Config indicated by + and applies to all files under models/example/

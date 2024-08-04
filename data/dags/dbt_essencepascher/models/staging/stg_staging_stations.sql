@@ -3,15 +3,15 @@
 with source as (
       select * from {{ source('staging', 'stations') }}
 ),
-renamed as (
+renamed_stations as (
     select
         id::int,
         latitude::float / 100000 as latitude,
         longitude::float / 100000 as longitude,
-        cp as postal_code,
-        pop,
-        lower(adresse) as adresse,
-        lower(ville) as town
+        lower(address) as address,
+        postal_code,
+        population,
+        lower(city) as city
     from source
 ),
 
@@ -22,13 +22,13 @@ final as (
             'latitude', latitude,
             'longitude', longitude,
             'postal_code', postal_code,
-            'pop', pop,
-            'adresse', adresse,
-            'town', town
+            'population', population,
+            'address', address,
+            'city', city
 
         )) as geolocalisation
     FROM
-        renamed as r
+        renamed_stations as r
     group by id
 )
 select * from final

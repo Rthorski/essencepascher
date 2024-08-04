@@ -1,5 +1,9 @@
 models:
   - name: stg_staging_prix
+    # indexes:
+    #   - columns: [injected_at]
+    #     unique: true
+    #     name: idx_injected_at
     config:
       contract:
         enforced: true
@@ -7,13 +11,13 @@ models:
     columns:
       - name: station_id
         data_type: int
-      - name: nom
+      - name: name
         data_type: varchar(255)
       - name: id
         data_type: int
-      - name: maj
+      - name: fuel_updated_at
         data_type: timestamp
-      - name: valeur
+      - name: value
         data_type: float
       - name: injected_at
         data_type: timestamp

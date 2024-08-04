@@ -15,7 +15,7 @@ with DAG(
   dag_id="essence_pas_cher",
   max_active_runs=1,
   default_args=default_args,
-  schedule="*/10 5-19 * * *",
+  schedule="*/10 5-19 * * *",  
   catchup=False,
   params={"url": "https://donnees.roulez-eco.fr/opendata/instantane_ruptures", "process_id": uuid.uuid4()}
 ) as dag:
@@ -32,12 +32,12 @@ with DAG(
   
   task_dbt_staging = BashOperator(
   task_id="dbt_run_staging",
-  bash_command="cd ${AIRFLOW_HOME}/dags/dbt_essencepascher && dbt run --select 'staging'"
+  bash_command="cd ${AIRFLOW_HOME}/dags/dbt_essencepascher && dbt run --target staging --select 'staging'"
 )
   
   task_dbt_marts = BashOperator(
   task_id="dbt_run_marts",
-  bash_command="cd ${AIRFLOW_HOME}/dags/dbt_essencepascher && dbt run --select 'marts'"
+  bash_command="cd ${AIRFLOW_HOME}/dags/dbt_essencepascher && dbt run --target prod --select 'marts'"
 )
   
 task_upload_on_gcp >> task_load_to_database >> task_dbt_staging >> task_dbt_marts

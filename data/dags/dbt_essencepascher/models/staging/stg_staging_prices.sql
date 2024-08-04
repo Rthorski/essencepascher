@@ -6,14 +6,14 @@
 }}
 
 select
-    LOWER(nom) as nom,
+    LOWER(name) as name,
     id::int,
-    maj::timestamp,
-    valeur::float,
+    fuel_updated_at::timestamp,
+    value::float,
     station_id::int,
     injected_at::timestamp,
     price_id::int
-from {{ source('staging', 'prix') }}
+from {{ source('staging', 'prices') }}
 {% if is_incremental() %}
   where
       injected_at > (select max(injected_at) from {{this}})

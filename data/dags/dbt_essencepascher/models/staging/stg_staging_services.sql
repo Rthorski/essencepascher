@@ -5,7 +5,7 @@ select *
 from {{ source('staging', 'services')}}
 ),
 
-renamed as (
+renamed_services as (
   select
     station_id::int,
     json_agg(service) as json_services
@@ -14,5 +14,5 @@ renamed as (
 )
 
 select *
-from renamed
+from renamed_services
 

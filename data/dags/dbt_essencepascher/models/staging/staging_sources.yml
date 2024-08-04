@@ -6,9 +6,9 @@ sources:
     schema: dev
     tables:
       - name: stations
-      - name: prix
-      - name: fermetures
-      - name: horaires
+      - name: prices
+      - name: gas_station_closures
+      - name: opening_hours
       - name: services
-      - name: ruptures
+      - name: shortages
       - name: stations_name
