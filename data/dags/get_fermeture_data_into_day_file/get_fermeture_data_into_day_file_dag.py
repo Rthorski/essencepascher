@@ -3,17 +3,18 @@ from airflow.operators.python import PythonOperator
 from essence_pas_cher.essence_pas_cher_controller import upload_on_gcp
 from get_fermeture_data_into_day_file.get_fermeture_data_into_day_file_controller import load_to_database
 import datetime
+from pytz import timezone
 
 default_args = {
     'owner': 'rthorski',
-    'start_date': datetime.datetime(2024, 1, 1),
+    'start_date': datetime.datetime(2024, 1, 1, tzinfo=timezone('Europe/Paris')),
 }
 
 with DAG(
   dag_id="get_fermeture_data_into_day_file",
   default_args=default_args,
   max_active_runs=1,
-  schedule="0 7 * * *",
+  schedule="0 9 * * *",
   catchup=False,
   params={"url": "https://donnees.roulez-eco.fr/opendata/annee/2024"}
 ) as dag:

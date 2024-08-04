@@ -4,18 +4,19 @@ from airflow.operators.bash import BashOperator
 from essence_pas_cher.essence_pas_cher_controller import upload_on_gcp, load_to_database
 import datetime
 import uuid
+from pytz import timezone
 
 
 default_args = {
     'owner': 'rthorski',
-    'start_date': datetime.datetime(2024, 1, 1),
+    'start_date': datetime.datetime(2024, 1, 1, tzinfo=timezone('Europe/Paris')),
 }
 
 with DAG(
   dag_id="essence_pas_cher",
   max_active_runs=1,
   default_args=default_args,
-  schedule="*/10 5-19 * * *",  
+  schedule="5-59/10 9-22 * * *",  
   catchup=False,
   params={"url": "https://donnees.roulez-eco.fr/opendata/instantane_ruptures", "process_id": uuid.uuid4()}
 ) as dag:
