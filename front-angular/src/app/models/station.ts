@@ -1,46 +1,46 @@
 export interface Station {
   id: number;
   name: string;
-  pop: string;
-  town: string;
-  adresse: string;
+  population: string;
+  city: string;
+  address: string;
   latitude: number;
   longitude: number;
   distance: number;
   gazole: {
     id: number;
-    maj: Date;
-    nom: string;
-    valeur: number;
+    fuel_updated_at: Date;
+    name: string;
+    value: number;
   };
   sp95: {
     id: number;
-    maj: Date;
-    nom: string;
-    valeur: number;
+    fuel_updated_at: Date;
+    name: string;
+    value: number;
   };
   e10: {
     id: number;
-    maj: Date;
-    nom: string;
-    valeur: number;
+    fuel_updated_at: Date;
+    name: string;
+    value: number;
   };
   sp98: {
     id: number;
-    maj: Date;
-    nom: string;
-    valeur: number;
+    fuel_updated_at: Date;
+    name: string;
+    value: number;
   };
   e85: {
     id: number;
-    maj: Date;
-    nom: string;
-    valeur: number;
+    fuel_updated_at: Date;
+    name: string;
+    value: number;
   };
   gplc: {
     id: number;
-    maj: Date;
-    nom: string;
-    valeur: number;
+    fuel_updated_at: Date;
+    name: string;
+    value: number;
   };
 }

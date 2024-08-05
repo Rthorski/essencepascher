@@ -42,6 +42,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   listFuels: any[] = [];
   fuelsSelectionned: any[] = [];
   allStations: any[] = [];
+  stationsFiltered: any[] = [];
 
   constructor(private stationService: StationsService) {}
 
@@ -211,7 +212,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadNearbyStations(this.latitude, this.longitude, this.radius);
   }
 
-  test(event, fuel: string) {
+  changeFilter(event, fuel: string) {
     if (this.fuelsSelectionned.includes(fuel) && !event.target.checked) {
       this.fuelsSelectionned = this.fuelsSelectionned.filter(
         (fuelSelected) => fuelSelected != fuel
@@ -243,6 +244,20 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       this.markerStationOver?.remove();
       this.markerStationOver = new Marker();
       this.markerStationOver?.setLngLat([lon, lat]).addTo(this.map!);
+    });
+  }
+
+  onStationsFiltered(event: any[]) {
+    this.stationsFiltered = event;
+    this.markers.forEach((marker) => {
+      marker.remove();
+    });
+    this.markers = [];
+    this.stationsFiltered.forEach((station) => {
+      const marker = new Marker()
+        .setLngLat([station.longitude, station.latitude])
+        .addTo(this.map!);
+      this.markers.push(marker);
     });
   }
 

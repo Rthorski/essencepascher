@@ -9,20 +9,32 @@
   <div class="right">
     <div class="filters">
       <div class="filter-rayon">
-        <label for="radius">Rayon (en kilomètres entre 1 et 50):</label>
+        <label for="radius">Changer le rayon (kms): </label>
         <input
-          min="1"
-          max="50"
-          type="number"
+          type="range"
+          name="radius"
           id="radius"
+          min="1"
+          max="10"
+          step="1"
           [(ngModel)]="radius"
-          (keyup.enter)="onRadiusChange()"
+          (change)="onRadiusChange()"
         />
-        <button (click)="onRadiusChange()">OK</button>
+        <span>{{ radius }}</span>
       </div>
+
       <div class="filter-fuel">
         <label for="fuel">Choix du carburant</label>
-        input:
+        @for (fuel of listFuels; track fuel.key) {
+        <input
+          type="checkbox"
+          name="{{ fuel.key }}"
+          id="{{ fuel.key }}"
+          (change)="changeFilter($event, fuel.key)"
+          checked="true"
+        />
+        <label for="{{ fuel.key }}">{{ fuel.label }}</label>
+        }
       </div>
     </div>
     <app-results
@@ -30,6 +42,11 @@
       [geoClicked]="geolocateClicked"
       (stationOver)="onStationOver($event)"
       (stationOut)="onStationOut($event)"
+      (fuelsInSelection)="onFuelSelection($event)"
+      (stationsFilteredOutput)="onStationsFiltered($event)"
+      [latitude]="latitude"
+      [longitude]="longitude"
+      [fuelsSelectionned]="fuelsSelectionned"
     />
   </div>
   }

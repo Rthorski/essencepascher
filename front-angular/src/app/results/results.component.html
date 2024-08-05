@@ -10,8 +10,8 @@
     <td mat-cell *matCellDef="let element">
       <div class="station-container">
         <div class="results-name">{{ element.name }}</div>
-        <div class="results-adresse">{{ element.adresse }}</div>
-        <div class="results-town">{{ element.town }}</div>
+        <div class="results-adresse">{{ element.address }}</div>
+        <div class="results-town">{{ element.city }}</div>
         <div class="results-distance">
           📍 {{ element.distance | number : "1.1-2" }}
           {{ element.distance >= 2 ? "kms" : "km" }}
@@ -33,13 +33,13 @@
         <div
           class="results-valeur"
           *ngIf="
-            element[column.key]?.valeur !== null &&
-              element[column.key]?.valeur !== undefined;
+            element[column.key]?.value !== null &&
+              element[column.key]?.value !== undefined;
             else elseBlock
           "
         >
           {{
-            element[column.key]?.valeur
+            element[column.key]?.value
               | number : "1.3-3"
               | currency : "EUR" : "symbol" : "1.3-3"
           }}
