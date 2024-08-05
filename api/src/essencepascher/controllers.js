@@ -1,17 +1,61 @@
 const pool = require("../../db");
 const queries = require("./queries");
 const geolib = require("geolib");
+require("dotenv").config();
 
-async function getStations() {
+async function getStationNames(req, res) {
   try {
-    const result = await pool.query(queries.getStations);
-    return result.rows;
+    const { id } = req.params;
+
+    const { rows } = await pool.query(queries.getStationNames, [id]);
+
+    const station = rows[0];
+
+    if (!station) {
+      return res.status(404).send("Station not found");
+    }
+
+    const { latitude, longitude } = station.geolocalisation[0];
+
+    if (!station.name) {
+      let response = await fetch(
+        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude}%2C${longitude}&radius=100&type=gas_station&key=${process.env.GOOGLE_API_KEY}`
+      );
+      let data = await response.json();
+      if (data && data["results"]) {
+        const namesResults = data.results
+          .map((result) => result.name)
+          .filter((name) => name);
+        const namesResultsJoin = namesResults.join(" & ");
+        const nameToUpdate = namesResultsJoin || "station-service";
+        await pool.query(queries.updateNameInStationsName, [nameToUpdate, id]);
+        await pool.query(queries.updateNameInMartLastPrice, [nameToUpdate, id]);
+        const updateRowResult = await pool.query(
+          queries.getRowsUpdateInMartLastPrice,
+          [id]
+        );
+        res.json(updateRowResult.rows);
+      }
+    } else {
+      console.log("pas de requête Google");
+      res.json(station);
+    }
+  } catch (error) {
+    console.log("error:", error);
+    res.status(500).send("Erreur serveur");
+  }
+}
+
+async function getStations(req, res) {
+  try {
+    const { rows } = await pool.query(queries.getStations);
+    res.json(rows);
   } catch (error) {
     console.log("error:", error);
   }
 }
 
-async function test(req, res) {
+async function getNearbyStations(req, res) {
   const { latitude, longitude, radius } = req.query;
 
   if (!latitude || !longitude || !radius) {
@@ -66,5 +110,6 @@ module.exports = {
   getStations,
   getLastPrice,
   getLastPriceFiltered,
-  test,
+  getNearbyStations,
+  getStationNames,
 };

@@ -3,14 +3,20 @@ const {
   getStations,
   getLastPrice,
   getLastPriceFiltered,
-  test,
+  getNearbyStations,
+  getStationNames,
 } = require("./controllers");
 
 const router = Router();
 
 router.get("/", getStations);
+
 router.post("/lastpriceFiltered", getLastPriceFiltered);
+
 router.get("/lastprice", getLastPrice);
-router.get("/test", test);
+
+router.get("/getNearbyStations", getNearbyStations);
+
+router.get("/name/:id", getStationNames);
 
 module.exports = router;

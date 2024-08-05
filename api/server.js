@@ -12,7 +12,7 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-  res.send("hello");
+  res.send("ok");
 });
 
 app.use("/api/v1/essencepascher/stations", stationsRoutes);
