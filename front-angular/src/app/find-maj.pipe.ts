@@ -9,9 +9,9 @@ export class FindMajPipe implements PipeTransform {
     if (!jsonPrix.id) {
       return '';
     } else {
-      const maj = jsonPrix.maj;
+      const fuel_updated_at = jsonPrix.fuel_updated_at;
       const now = Date.now();
-      const msBetweenNowMaj = now - new Date(maj).getTime();
+      const msBetweenNowMaj = now - new Date(fuel_updated_at).getTime();
       const milliTominutes = msBetweenNowMaj / 1000 / 60;
       if (milliTominutes < 60) {
         return `🕦 ${Math.round(milliTominutes)} minutes`;

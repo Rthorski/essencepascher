@@ -16,7 +16,7 @@ with DAG(
   dag_id="essence_pas_cher",
   max_active_runs=1,
   default_args=default_args,
-  schedule="5-59/10 9-22 * * *",  
+  schedule="5-59/10 9-21 * * *",  
   catchup=False,
   params={"url": "https://donnees.roulez-eco.fr/opendata/instantane_ruptures", "process_id": uuid.uuid4()}
 ) as dag:

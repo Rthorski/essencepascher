@@ -31,7 +31,7 @@ import { SearchBoxComponent } from '../search-box/search-box.component';
 export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   map: Map | undefined;
   stations!: any[];
-  radius: number = 1;
+  radius: number = 2;
   latitude!: number;
   longitude!: number;
   geolocateClicked = false;
@@ -39,6 +39,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   apiKey: string = 'LyXVuu584biw12WAl9hG';
   specialMarker!: any;
   markerStationOver!: Marker | undefined;
+  listFuels: any[] = [];
+  fuelsSelectionned: any[] = [];
+  allStations: any[] = [];
 
   constructor(private stationService: StationsService) {}
 
@@ -50,6 +53,10 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    this.stationService
+      .getAllStations()
+      .subscribe((stations) => (this.allStations = stations));
+
     const initialState = { lng: 2.45, lat: 46.866667, zoom: 5 };
 
     this.map = new Map({
@@ -79,8 +86,80 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       const { latitude, longitude } = event.coords;
       this.latitude = latitude;
       this.longitude = longitude;
+      this.removeClusterLayer();
       this.loadNearbyStations(latitude, longitude, this.radius);
       this.geolocateClicked = true;
+    });
+
+    this.map.on('load', () => {
+      this.addClusterLayer();
+    });
+  }
+
+  private addClusterLayer(): void {
+    this.map!.addSource('stations', {
+      type: 'geojson',
+      data: {
+        type: 'FeatureCollection',
+        features: this.allStations.map((station) => ({
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'Point',
+            coordinates: [
+              station.geolocalisation[0].longitude,
+              station.geolocalisation[0].latitude,
+            ],
+          },
+        })),
+      },
+      cluster: true,
+      clusterMaxZoom: 14,
+      clusterRadius: 50,
+    });
+
+    this.map!.addLayer({
+      id: 'clusters',
+      type: 'circle',
+      source: 'stations',
+      filter: ['has', 'point_count'],
+      paint: {
+        'circle-color': [
+          'step',
+          ['get', 'point_count'],
+          '#51bbd6',
+          100,
+          '#f1f075',
+          750,
+          '#f28cb1',
+        ],
+        'circle-radius': ['step', ['get', 'point_count'], 20, 100, 30, 750, 40],
+      },
+    });
+
+    this.map!.addLayer({
+      id: 'cluster-count',
+      type: 'symbol',
+      source: 'stations',
+      filter: ['has', 'point_count'],
+      layout: {
+        'text-field': '{point_count_abbreviated}',
+        'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+        'text-size': 12,
+      },
+    });
+
+    this.map!.addLayer({
+      id: 'unclustered-point',
+      type: 'circle',
+      source: 'stations',
+      filter: ['!', ['has', 'point_count']],
+      paint: {
+        'circle-color': '#11b4da',
+        'circle-radius': 8,
+        'circle-stroke-width': 1,
+        'circle-stroke-color': '#fff',
+      },
     });
   }
 
@@ -132,10 +211,26 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadNearbyStations(this.latitude, this.longitude, this.radius);
   }
 
+  test(event, fuel: string) {
+    if (this.fuelsSelectionned.includes(fuel) && !event.target.checked) {
+      this.fuelsSelectionned = this.fuelsSelectionned.filter(
+        (fuelSelected) => fuelSelected != fuel
+      );
+    } else if (!this.fuelsSelectionned.includes(fuel) && event.target.checked) {
+      this.fuelsSelectionned = [...this.fuelsSelectionned, fuel];
+    }
+  }
+
+  onFuelSelection(event: any) {
+    this.listFuels = event;
+    this.fuelsSelectionned = this.listFuels.map((fuel) => fuel.key);
+  }
+
   onDataChange(event: any) {
     const { latitude, longitude } = event;
     this.latitude = latitude;
     this.longitude = longitude;
+    this.removeClusterLayer();
     this.loadNearbyStations(latitude, longitude, this.radius);
     this.addSearchedAdressMarker(latitude, longitude);
     this.geolocateClicked = true;
@@ -174,6 +269,21 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.specialMarker = new Marker({ element: el })
       .setLngLat([longitude, latitude])
       .addTo(this.map!);
+  }
+
+  removeClusterLayer(): void {
+    if (this.map!.getLayer('clusters')) {
+      this.map!.removeLayer('clusters');
+    }
+    if (this.map!.getLayer('cluster-count')) {
+      this.map!.removeLayer('cluster-count');
+    }
+    if (this.map!.getLayer('unclustered-point')) {
+      this.map!.removeLayer('unclustered-point');
+    }
+    if (this.map!.getSource('stations')) {
+      this.map!.removeSource('stations');
+    }
   }
 
   loadNearbyStations(
