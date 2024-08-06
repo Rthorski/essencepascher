@@ -1,29 +1,13 @@
 {{ config (materialized='table') }}
 
 
-WITH prices AS (
+WITH mart_one_year_ytd AS (
 SELECT
-	ssp.*,
-	TO_CHAR(fuel_updated_at,
-	'YYYY-MM-DD') AS year_month_day
+	*
 FROM
-	"essencepascher_db"."staging"."stg_staging_prices" ssp
-WHERE fuel_updated_at >= '2024-01-01'::date
-AND fuel_updated_at < current_date
-),
+	"essencepascher_db"."marts"."mart_one_year_price_trend" ssp
+WHERE date_series >= '2024-01-01'
+)
 
-groupby_date_name AS (
-SELECT
-	year_month_day,
-	name,
-	round(avg(value)::NUMERIC, 3) AS avg_fuel
-FROM
-	prices
-GROUP BY
-	year_month_day,
-	name
-ORDER BY
-	year_month_day)
-	
 SELECT *
-FROM groupby_date_name
+FROM mart_one_year_ytd

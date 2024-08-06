@@ -27,4 +27,4 @@ with DAG(
   bash_command="cd ${AIRFLOW_HOME}/dags/dbt_essencepascher && dbt run --target prod --select 'marts.mart_one_year_price_trend'",
   )
   
-  task_mart_ytd_price_trend >> task_mart_one_year_price_trend
+  task_mart_one_year_price_trend >> task_mart_ytd_price_trend
