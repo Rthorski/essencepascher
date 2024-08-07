@@ -57,7 +57,7 @@ SELECT
 	round(sp.avg_sp95::NUMERIC, 3) AS avg_sp95,
 	round(e.avg_e10::numeric,3) AS avg_e10,
 	round(ee.avg_e85::NUMERIC, 3) AS avg_e85,
-	round(gplc.avg_gplc::NUMERIC, 3) AS avg_glc
+	round(gplc.avg_gplc::NUMERIC, 3) AS avg_gplc
 FROM
 	range_one_year r
 LEFT JOIN avg_gazole g ON g.year_month_day = r.date_series
