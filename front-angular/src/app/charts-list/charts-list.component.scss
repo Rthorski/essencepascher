@@ -1,3 +1,11 @@
 .charts-wrap {
+  display: flex;
+  justify-content: space-between;
   margin-top: 60px;
+}
+
+app-chart-one-year-price-trend {
+  flex: 1 0 45%; // Prend 45% de l'espace disponible
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); // Ajoute une ombre de boîte
+  margin: 10px; // Ajoute un espace autour du graphique
 }

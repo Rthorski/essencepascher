@@ -1,1 +1,11 @@
-<div class="charts-wrap"></div>
+<div class="charts-wrap">
+  <app-chart-one-year-price-trend
+    [martOneYear]="martOneYearPriceTrend$ | async"
+    [title]="titlemartOneYearPriceTrend"
+  ></app-chart-one-year-price-trend>
+
+  <app-chart-one-year-price-trend
+    [martOneYear]="martOneYearYtd$ | async"
+    [title]="titlemartOneYearYtd"
+  ></app-chart-one-year-price-trend>
+</div>
