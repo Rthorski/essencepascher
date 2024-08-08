@@ -3,7 +3,6 @@ const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 
 async function getPredictionsAutoComplete(req, res) {
   const query = req.query.input;
-  console.log("query", query);
 
   const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${query}&key=${GOOGLE_API_KEY}`;
 
