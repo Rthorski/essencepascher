@@ -37,7 +37,6 @@ async function getStationNames(req, res) {
         res.json(updateRowResult.rows);
       }
     } else {
-      console.log("pas de requête Google");
       res.json(station);
     }
   } catch (error) {
