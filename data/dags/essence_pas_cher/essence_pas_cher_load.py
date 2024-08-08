@@ -113,6 +113,7 @@ def load_prix_table(dict_df, name, process_id, date_ti):
   parse_dates = 'fuel_updated_at'
   
   df_table_prix = stg_get_table_with_where_condition(columns=columns, name=name, dtype=dtype, where_condition=where_condition, parse_dates=parse_dates)
+  df_data_entry.rename(columns=columns_to_rename, inplace=True)
 
   news_rows = search_new_or_updated_rows(df_table=df_table_prix, df_entry_data=df_data_entry)
 
@@ -120,12 +121,11 @@ def load_prix_table(dict_df, name, process_id, date_ti):
   
   if news_rows.shape[0] > 0:
     news_rows["process_id"] = process_id
-    news_rows = news_rows[['nom', 'id', 'maj', 'valeur', 'station_id', 'injected_at', 'year', 'process_id', 'year_month']]
+    news_rows = news_rows[['name', 'id', 'fuel_updated_at', 'value', 'station_id', 'injected_at', 'year', 'process_id', 'year_month']]
 
     df["id_station"] = pd.to_numeric(df["id_station"], downcast='integer')
     news_rows = news_rows.merge(df, how='inner', left_on='station_id', right_on='id_station')
-    news_rows = news_rows[['nom', 'id', 'maj', 'valeur', 'station_id', 'injected_at', 'year', 'process_id', 'year_month']]
-    news_rows.rename(columns=columns_to_rename, inplace=True)
+    news_rows = news_rows[['name', 'id', 'fuel_updated_at', 'value', 'station_id', 'injected_at', 'year', 'process_id', 'year_month']]
 
     print("nouveaux prix", news_rows.shape)
     print("début injection nouvelles lignes")
@@ -419,8 +419,7 @@ def search_new_or_updated_rows(df_table, df_entry_data):
   if "station_id" in df_table.columns:
     df_table["station_id"] = pd.to_numeric(df_table["station_id"], downcast='integer')
     df_entry_data["station_id"] = pd.to_numeric(df_entry_data["station_id"], downcast='integer')
-  
-  
+
   new_or_updated_lines = pd.merge(df_entry_data, df_table, how="left", indicator=True)
   news_rows = new_or_updated_lines.loc[new_or_updated_lines["_merge"] == "left_only"]
   news_rows.drop(columns="_merge", inplace=True)
