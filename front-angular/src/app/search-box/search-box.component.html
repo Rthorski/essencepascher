@@ -3,4 +3,13 @@
   name="search-box"
   id="search-box"
   placeholder="rechercher une adresse"
+  #searchInput
 />
+<ul *ngIf="predictions.length > 0">
+  <li
+    *ngFor="let prediction of predictions"
+    (click)="onPredictionSelected(prediction)"
+  >
+    {{ prediction.description }}
+  </li>
+</ul>

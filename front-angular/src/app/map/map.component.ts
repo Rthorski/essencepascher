@@ -13,7 +13,6 @@ import {
   Marker,
   GeolocateControl,
   LngLatBounds,
-  Popup,
 } from '@maptiler/sdk';
 import '@maptiler/sdk/dist/maptiler-sdk.css';
 import { StationsService } from '../stations.service';
@@ -43,6 +42,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   fuelsSelectionned: any[] = [];
   allStations: any[] = [];
   stationsFiltered: any[] = [];
+  resetInput: boolean = false;
 
   constructor(private stationService: StationsService) {}
 
@@ -90,6 +90,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       this.removeClusterLayer();
       this.loadNearbyStations(latitude, longitude, this.radius);
       this.geolocateClicked = true;
+      this.resetInput = true;
     });
 
     this.map.on('load', () => {
@@ -319,5 +320,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this.addMarkerOnMap();
         this.fitMapToBounds();
       });
+  }
+
+  onInputResetRequested() {
+    this.resetInput = false;
   }
 }

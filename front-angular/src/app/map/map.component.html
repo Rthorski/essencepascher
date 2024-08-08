@@ -1,9 +1,12 @@
 <div class="container">
-  <div class="map" #map></div>
-  <app-search-box
-    (locationSelected)="onDataChange($event)"
-    class="app-search-box"
-  />
+  <div class="map" #map>
+    <app-search-box
+      (locationSelected)="onDataChange($event)"
+      class="app-search-box"
+      [resetInput]="resetInput"
+      (inputResetRequested)="onInputResetRequested()"
+    />
+  </div>
 
   @if (geolocateClicked) {
   <div class="right">
