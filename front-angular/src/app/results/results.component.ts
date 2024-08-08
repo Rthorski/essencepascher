@@ -97,9 +97,6 @@ export class ResultsComponent implements AfterViewInit, OnInit, OnChanges {
         switchMap((stations: any[]) => {
           const updateNames$ = stations.map((station) =>
             this.stationService.getStationsName(station.id).pipe(
-              tap((data) =>
-                console.log('api data for station', station.id, ':', data)
-              ),
               catchError((error) => {
                 console.error('error for station', station.id, ':', error);
                 return of(null);
@@ -109,12 +106,7 @@ export class ResultsComponent implements AfterViewInit, OnInit, OnChanges {
           return forkJoin(updateNames$).pipe(
             map((nestedArray) => [].concat(...nestedArray)),
             map((data) => (this.stationsWithNames = data)),
-            tap((data) => console.log('forkJoin data', data)),
-            concatMap(() =>
-              of(this.stationsWithNames).pipe(
-                tap((data) => console.log('of data', data))
-              )
-            )
+            concatMap(() => of(this.stationsWithNames).pipe())
           );
         })
       )
@@ -145,7 +137,6 @@ export class ResultsComponent implements AfterViewInit, OnInit, OnChanges {
         this.fuelsInSelection.emit(this.fuelColumnsFiltered);
 
         this.filterSubject.subscribe((filters) => {
-          console.log(filters, 'ici les filtres');
           this.stationsFiltered = this.selectStationsWithFuelFiltered(
             this.stationsTransform,
             filters
