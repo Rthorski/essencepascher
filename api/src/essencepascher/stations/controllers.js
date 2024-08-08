@@ -5,7 +5,8 @@ require("dotenv").config();
 
 async function getStationNames(req, res) {
   try {
-    const { id } = req.params;
+    let { id } = req.params;
+    id = parseInt(id);
 
     const { rows } = await pool.query(queries.getStationNames, [id]);
 
@@ -51,6 +52,7 @@ async function getStations(req, res) {
     res.json(rows);
   } catch (error) {
     console.log("error:", error);
+    res.status(500).send("Erreur serveur");
   }
 }
 
@@ -101,7 +103,7 @@ async function getLastPriceFiltered(req, res) {
     res.json(rows);
   } catch (error) {
     console.error("Erreur lors de la récupération des prix :", error);
-    res.status(500).send("Erreur serveur");
+    res.status(500).send("Erreur lors de la récupération des prix");
   }
 }
 
