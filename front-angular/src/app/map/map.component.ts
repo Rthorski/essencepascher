@@ -19,6 +19,7 @@ import { StationsService } from '../stations.service';
 import { FormsModule } from '@angular/forms';
 import { ResultsComponent } from '../results/results.component';
 import { SearchBoxComponent } from '../search-box/search-box.component';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-map',
@@ -35,7 +36,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   longitude!: number;
   geolocateClicked = false;
   markers: any[] = [];
-  apiKey: string = 'LyXVuu584biw12WAl9hG';
   specialMarker!: any;
   markerStationOver!: Marker | undefined;
   listFuels: any[] = [];
@@ -50,7 +50,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   private mapContainer!: ElementRef<HTMLElement>;
 
   ngOnInit(): void {
-    config.apiKey = 'LyXVuu584biw12WAl9hG';
+    config.apiKey = environment.mapTilerApiKey;
   }
 
   ngAfterViewInit(): void {
