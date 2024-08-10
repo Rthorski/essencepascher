@@ -21,7 +21,6 @@ import {
   switchMap,
   map,
   concatMap,
-  tap,
   catchError,
   of,
   BehaviorSubject,
@@ -53,7 +52,9 @@ export class ResultsComponent implements AfterViewInit, OnInit, OnChanges {
   @Output() stationOut: EventEmitter<any> = new EventEmitter();
   @Output() stationsFilteredOutput: EventEmitter<Station[]> =
     new EventEmitter();
+  @Output() fuelsInSelection = new EventEmitter<string[]>();
 
+  @ViewChild(MatSort) sort!: MatSort;
   stations: any[] = [];
   test: boolean = true;
   stationsWithNames: any[] = [];
@@ -79,80 +80,83 @@ export class ResultsComponent implements AfterViewInit, OnInit, OnChanges {
     { key: 'gplc', label: 'GPLC' },
   ];
 
-  @Output() fuelsInSelection = new EventEmitter<string[]>();
   fuelColumnsFiltered!: any[];
   dataSource!: MatTableDataSource<any>;
+  filterSubject: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+  listStationFiltered$!: Observable<Station[]>;
 
-  @ViewChild(MatSort) sort!: MatSort;
   constructor(private stationService: StationsService) {
     this.dataSource = new MatTableDataSource();
   }
 
-  filterSubject: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
-  listStationFiltered$!: Observable<Station[]>;
-
   ngOnInit(): void {
-    this.stationService.stations$
-      .pipe(
-        switchMap((stations: any[]) => {
-          const updateNames$ = stations.map((station) =>
-            this.stationService.getStationsName(station.id).pipe(
-              catchError((error) => {
-                console.error('error for station', station.id, ':', error);
-                return of(null);
-              })
-            )
-          );
-          return forkJoin(updateNames$).pipe(
-            map((nestedArray) => [].concat(...nestedArray)),
-            map((data) => (this.stationsWithNames = data)),
-            concatMap(() => of(this.stationsWithNames).pipe())
-          );
-        })
-      )
-      .subscribe((stations: any[]) => {
-        this.stations = stations;
-        this.stationsTransform = this.stationService.transformToStationModel(
-          this.stationsWithNames
-        );
-        this.stationsTransform.forEach((station) => {
-          station.distance = this.calculeDistance(
-            this.latitude,
-            this.longitude,
-            station.latitude,
-            station.longitude
-          );
-        });
-        this.dataSource.data = this.stationsTransform;
+    this.fetchStationsAndUpdateNames().subscribe((stations: any[]) => {
+      this.processStationsData(stations);
+    });
+  }
 
-        this.fuelColumnsFiltered = this.fuelColumns
-          .slice()
-          .filter((column) =>
-            this.dataSource.data.some(
-              (station) =>
-                station[column.key].value !== null &&
-                station[column.key].value !== 0
-            )
-          );
-        this.fuelsInSelection.emit(this.fuelColumnsFiltered);
-
-        this.filterSubject.subscribe((filters) => {
-          this.stationsFiltered = this.selectStationsWithFuelFiltered(
-            this.stationsTransform,
-            filters
-          );
-          this.dataSource.data = this.stationsFiltered;
-          this.stationsFilteredOutput.emit(this.stationsFiltered);
-          this.updateDisplayedColumns(filters);
-          this.sortData();
-        });
-        this.displayedColumnsFiltered = this.displayedColumns.filter((column) =>
-          ['id', ...this.fuelColumnsFiltered.map((fuel) => fuel.key)].includes(
-            column
+  private fetchStationsAndUpdateNames(): Observable<any[]> {
+    return this.stationService.stations$.pipe(
+      switchMap((stations: any[]) => {
+        const updateNames$ = stations.map((station) =>
+          this.stationService.getStationsName(station.id).pipe(
+            catchError((error) => {
+              console.error('error for station', station.id, ':', error);
+              return of(null);
+            })
           )
         );
-        this.sortData();
-      });
+        return forkJoin(updateNames$).pipe(
+          map((nestedArray) => [].concat(...nestedArray)),
+          map((data) => (this.stationsWithNames = data)),
+          concatMap(() => of(this.stationsWithNames))
+        );
+      })
+    );
+  }
+
+  private processStationsData(stations: any[]) {
+    this.stations = stations;
+    this.stationsTransform = this.stationService.transformToStationModel(
+      this.stationsWithNames
+    );
+    this.stationsTransform.forEach((station) => {
+      station.distance = this.calculeDistance(
+        this.latitude,
+        this.longitude,
+        station.latitude,
+        station.longitude
+      );
+    });
+    this.dataSource.data = this.stationsTransform;
+
+    this.fuelColumnsFiltered = this.fuelColumns
+      .slice()
+      .filter((column) =>
+        this.dataSource.data.some(
+          (station) =>
+            station[column.key].value !== null &&
+            station[column.key].value !== 0
+        )
+      );
+    this.fuelsInSelection.emit(this.fuelColumnsFiltered);
+
+    this.filterSubject.subscribe((filters) => {
+      this.stationsFiltered = this.selectStationsWithFuelFiltered(
+        this.stationsTransform,
+        filters
+      );
+      this.dataSource.data = this.stationsFiltered;
+      this.stationsFilteredOutput.emit(this.stationsFiltered);
+      this.updateDisplayedColumns(filters);
+      this.sortData();
+    });
+    this.displayedColumnsFiltered = this.displayedColumns.filter((column) =>
+      ['id', ...this.fuelColumnsFiltered.map((fuel) => fuel.key)].includes(
+        column
+      )
+    );
+    this.sortData();
   }
 
   selectStationsWithFuelFiltered(
