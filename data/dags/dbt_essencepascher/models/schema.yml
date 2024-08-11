@@ -1,13 +1,8 @@
 models:
   - name: stg_staging_prix
-    # indexes:
-    #   - columns: [injected_at]
-    #     unique: true
-    #     name: idx_injected_at
     config:
       contract:
         enforced: true
-
     columns:
       - name: station_id
         data_type: int
@@ -27,3 +22,16 @@ models:
           - type: not_null
           - type: unique
           - type: primary_key
+  - name: stg_staging_stations
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: id
+        data_type: int
+        constraints:
+          - type: not_null
+          - type: unique
+          - type: primary_key
+      - name: geolocalisation
+        data_type: json

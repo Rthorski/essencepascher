@@ -2,6 +2,10 @@
     config(
         materialized='incremental',
         on_schema_change='append_new_columns',
+        indexes=[
+            {'columns': ['station_id'], 'type': 'btree'},
+            {'columns': ['injected_at'], 'type': 'btree'},
+        ]
     )
 }}
 

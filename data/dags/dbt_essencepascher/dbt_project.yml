@@ -33,6 +33,6 @@ models:
   dbt_essencepascher:
   staging:
     +schema: staging
+
   marts:
     +schema: marts
-# Config indicated by + and applies to all files under models/example/

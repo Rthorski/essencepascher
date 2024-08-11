@@ -1,4 +1,12 @@
-{{ config (materialized='table')}}
+{{ 
+    config(
+        materialized='table',
+        indexes=[
+          {'columns': ['station_id'], 'type': 'btree'},
+        ]
+)  
+}}
+        
 
 with source as (
 select *
@@ -12,6 +20,7 @@ renamed_services as (
   from source
   group by station_id
 )
+
 
 select *
 from renamed_services

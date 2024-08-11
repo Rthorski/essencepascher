@@ -1,4 +1,8 @@
-{{ config (materialized='table')}}
+{{ 
+    config(
+        materialized='table',
+    ) 
+}}
 
 with source as (
       select * from {{ source('staging', 'stations') }}
