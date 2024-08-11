@@ -9,4 +9,11 @@ RUN apt-get -y update && \
 COPY requirements.txt /requirements.txt
 USER airflow
 RUN pip install --user --no-cache-dir -r /requirements.txt
+
+COPY ./dags /opt/airflow/dags
+COPY ./plugins /opt/airflow/plugins 
+COPY ./logs /opt/airflow/logs
+COPY ./config /opt/airflow/config
+COPY airflow.cfg /opt/airflow/airflow.cfg
+
 EXPOSE 8080 8081
