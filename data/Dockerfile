@@ -10,13 +10,6 @@ COPY requirements.txt /requirements.txt
 USER airflow
 RUN pip install --user --no-cache-dir -r /requirements.txt
 
-RUN mkdir -p /opt/airflow/config
-RUN mkdir -p /opt/airflow/logs
-RUN mkdir -p /opt/airflow/plugins
-
-COPY ./dags /opt/airflow/dags
-COPY ./plugins /opt/airflow/plugins 
-COPY ./logs /opt/airflow/logs
-COPY ./config /opt/airflow/config
+COPY . .
 
 EXPOSE 8080 8081
