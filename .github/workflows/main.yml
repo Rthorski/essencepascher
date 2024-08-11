@@ -1,0 +1,17 @@
+name: build, test, and push docker images
+
+on:
+  push:
+    branches:
+      - main
+
+jobs: 
+  test-api:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Go to api and run tests
+        run: cd api && npm i && npm run test
+
+    
