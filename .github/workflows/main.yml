@@ -26,6 +26,7 @@ jobs:
         uses: docker/build-push-action@v6.6.1
         with: 
           push: true
+          context: "{{defaultContext}}:api"
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/essencepascherapi:latest
     
 
