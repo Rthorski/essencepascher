@@ -6,6 +6,9 @@ RUN apt-get -y update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+RUN mkdir /app
+WORKDIR /app
+
 COPY requirements.txt /requirements.txt
 USER airflow
 RUN pip install --user --no-cache-dir -r /requirements.txt
