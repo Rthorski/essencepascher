@@ -12,7 +12,6 @@ jobs:
       - name: Go to api and run tests
         run: cd api && npm i && npm run test
 
-
   docker:
     needs: test-api
     if: github.ref == 'refs/heads/main'
