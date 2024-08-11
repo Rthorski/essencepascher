@@ -8,6 +8,8 @@ services:
       - "3000:3000"
     depends_on:
       - db_essencepascher
+    networks:
+      - essencepascher
 
   db_essencepascher:
     image: postgres
@@ -20,3 +22,9 @@ services:
       - ~/apps/postgresql/db_essencepascher:/var/lib/postgresql/data
     ports:
       - 5433:5432
+    networks:
+      - essencepascher
+
+networks:
+  essencepascher:
+    driver: bridge

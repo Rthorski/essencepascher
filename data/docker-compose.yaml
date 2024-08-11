@@ -3,8 +3,8 @@ x-airflow-common: &airflow-common
   # In order to add custom dependencies or upgrade provider packages you can use your extended image.
   # Comment the image line, place your Dockerfile in the directory where you placed the docker-compose.yaml
   # and uncomment the "build" line below, Then run `docker-compose build` to build the images.
-  # image: ${AIRFLOW_IMAGE_NAME:-rthorski/apache-airflow:v1}
-  build: .
+  image: ${AIRFLOW_IMAGE_NAME:-rthorski/essencepascher-airflow:latest}
+  # build: .
   environment: &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: LocalExecutor
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
@@ -51,6 +51,8 @@ services:
       retries: 5
       start_period: 5s
     restart: always
+    networks:
+      - essencepascher_essencepascher
 
   # redis:
   #   image: redis:latest
@@ -80,6 +82,8 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+    networks:
+      - essencepascher_essencepascher
 
   airflow-scheduler:
     <<: *airflow-common
@@ -95,6 +99,8 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+    networks:
+      - essencepascher_essencepascher
 
   # airflow-worker:
   #   <<: *airflow-common
@@ -145,6 +151,8 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+    networks:
+      - essencepascher_essencepascher
 
   airflow-init:
     <<: *airflow-common
@@ -209,6 +217,8 @@ services:
     user: "0:0"
     volumes:
       - ${AIRFLOW_PROJ_DIR:-.}:/sources
+    networks:
+      - essencepascher_essencepascher
 
   airflow-cli:
     <<: *airflow-common
@@ -222,6 +232,8 @@ services:
       - bash
       - -c
       - airflow
+    networks:
+      - essencepascher_essencepascher
 
   # You can enable flower by adding "--profile flower" option e.g. docker-compose --profile flower up
   # or by explicitly targeted on the command line e.g. docker-compose up flower.
@@ -256,6 +268,10 @@ services:
   #     - ~/apps/postgresql/db_essencepascher:/var/lib/postgresql/data
   #   ports:
   #     - 5433:5432
+
+networks:
+  essencepascher_essencepascher:
+    external: true
 
 volumes:
   postgres-db-volume:
