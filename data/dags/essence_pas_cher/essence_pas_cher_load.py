@@ -114,8 +114,12 @@ def load_prix_table(dict_df, name, process_id, date_ti):
   
   df_table_prix = stg_get_table_with_where_condition(columns=columns, name=name, dtype=dtype, where_condition=where_condition, parse_dates=parse_dates)
   df_data_entry.rename(columns=columns_to_rename, inplace=True)
+  
+  df_table_prix = df_table_prix[['name', 'id', 'fuel_updated_at', 'value', 'station_id', 'year', 'year_month']]
+  df_data_entry = df_data_entry[['name', 'id', 'fuel_updated_at', 'value', 'station_id', 'year', 'year_month']]
+  conditions_merging = ['id', 'fuel_updated_at', 'value', 'station_id']
 
-  news_rows = search_new_or_updated_rows(df_table=df_table_prix, df_entry_data=df_data_entry)
+  news_rows = search_new_or_updated_rows(df_table=df_table_prix, df_entry_data=df_data_entry, conditions_merging=conditions_merging, name=name)
 
   df = get_all_stations()
   
@@ -234,7 +238,9 @@ def load_stations_table(dict_df, name, date_ti):
 
 
   news_rows = search_new_or_updated_rows(df_table=df_table_stations,
-                                        df_entry_data=df_entry_data)
+                                        df_entry_data=df_entry_data,
+                                        conditions_merging=None,
+                                        name=name)
   
   insert_and_update_rows(news_rows, name, primary_key='id')
 
@@ -300,7 +306,7 @@ def load_ruptures_table(dict_df, name):
   
 
   news_rows = search_new_or_updated_rows(df_table=df_table_rupture,
-                                         df_entry_data=df_ruptures)
+                                         df_entry_data=df_ruptures, conditions_merging=None, name=name)
   
   print(f"nouvelles lignes ou à update dans la table ruptures: {news_rows.shape}")
   update_end_shortage(tuple_concatened_id)
@@ -414,19 +420,28 @@ def get_entry_data(df, dtype):
   return df
 
 
-def search_new_or_updated_rows(df_table, df_entry_data):
+def search_new_or_updated_rows(df_table, df_entry_data, conditions_merging, name):
   
-  if "station_id" in df_table.columns:
+  if "prices" in name or "shortages" in name:
+
     df_table["station_id"] = pd.to_numeric(df_table["station_id"], downcast='integer')
     df_entry_data["station_id"] = pd.to_numeric(df_entry_data["station_id"], downcast='integer')
-
-  new_or_updated_lines = pd.merge(df_entry_data, df_table, how="left", indicator=True)
-  news_rows = new_or_updated_lines.loc[new_or_updated_lines["_merge"] == "left_only"]
-  news_rows.drop(columns="_merge", inplace=True)
-  if "station_id" in df_table.columns:
-    news_rows["injected_at"] = heure_fr_str
     
-  return news_rows
+    new_or_updated_lines = pd.merge(df_entry_data, df_table, how="left", indicator=True, on=conditions_merging, suffixes=('_entry', '_table'))
+    
+    if "prices" in name:
+
+      new_or_updated_lines.drop(columns=['name_table', 'year_table', 'year_month_table'], inplace=True)
+      new_or_updated_lines.rename(columns={'name_entry': 'name', 'year_entry': 'year', 'year_month_entry': 'year_month'}, inplace=True)
+      
+    new_or_updated_lines = new_or_updated_lines.loc[new_or_updated_lines["_merge"] == "left_only"]
+    new_or_updated_lines.drop(columns="_merge", inplace=True)
+    new_or_updated_lines["injected_at"] = heure_fr_str
+    
+  elif "stations" in name:
+    new_or_updated_lines = pd.merge(df_entry_data, df_table, how="left")
+  
+  return new_or_updated_lines
   
 
 def stg_get_uniques_values_data_entry(dict_df, year_month):
