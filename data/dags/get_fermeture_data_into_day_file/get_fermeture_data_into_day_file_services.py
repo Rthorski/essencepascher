@@ -54,8 +54,7 @@ def load_if_news_rows_is_true(news_rows, name):
     
   if news_rows.shape[0] > 1:
     print(f"nouvelles lignes dans la table fermetures: {news_rows.shape}")
-    
-    news_rows = news_rows[["type", "debut", "fin", "station_id", "injected_at","concatened_id"]]
+    news_rows = news_rows[["type", "start_closure", "end_closure", "station_id", "injected_at","concatened_id"]]
     insert_and_update_rows(news_rows, name, primary_key="concatened_id")
 
   else:

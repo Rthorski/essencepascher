@@ -24,6 +24,6 @@ def load_to_database(**context):
   df_fermetures = concatenate_primary_key(df_entry_data)
   df_table_fermetures = get_table_to_dataframe(columns=columns, name=name, dtype=dtype)
   news_rows = search_new_or_updated_rows(df_table=df_table_fermetures,
-                                          df_entry_data=df_fermetures)
+                                          df_entry_data=df_fermetures, conditions_merging=None, name=name)
   news_rows = news_rows.merge(df_stations, left_on='station_id', right_on='id_station')
   load_if_news_rows_is_true(news_rows, name)
