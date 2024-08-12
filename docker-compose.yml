@@ -1,6 +1,12 @@
 services:
-  # frontend:
-  # ... (configuration de votre service frontend)
+  frontend:
+    build: ./front-angular
+    ports:
+      - 4200:80
+    expose:
+      - 80
+    networks:
+      - essencepascher
 
   backend:
     build: ./api

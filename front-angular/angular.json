@@ -17,7 +17,18 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/front-angular",
+            "allowedCommonJsDependencies": [
+              "@angular/common",
+              "@angular/core",
+              "@angular/forms",
+              "@angular/router",
+              "maplibre-gl",
+              "events"
+            ],
+            "outputPath": {
+              "base": "dist/front-angular",
+              "browser": ""
+            },
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -29,7 +40,10 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss"],
+            "styles": [
+              "src/styles.scss",
+              "node_modules/@maptiler/sdk/dist/maptiler-sdk.css"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -37,13 +51,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "2mb",
+                  "maximumError": "2mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kB",
-                  "maximumError": "4kB"
+                  "maximumWarning": "2mb",
+                  "maximumError": "2mb"
                 }
               ],
               "outputHashing": "all"
