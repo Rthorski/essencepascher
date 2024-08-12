@@ -421,8 +421,8 @@ def get_entry_data(df, dtype):
 
 
 def search_new_or_updated_rows(df_table, df_entry_data, conditions_merging, name):
-  
-  if "prices" in name or "shortages" in name:
+
+  if "prices" in name or "shortages" in name or "gas_station_closures" in name:
 
     df_table["station_id"] = pd.to_numeric(df_table["station_id"], downcast='integer')
     df_entry_data["station_id"] = pd.to_numeric(df_entry_data["station_id"], downcast='integer')
