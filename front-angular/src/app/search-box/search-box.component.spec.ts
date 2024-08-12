@@ -48,4 +48,25 @@ describe('SearchBoxComponent', () => {
     });
     expect(inputResetRequestedEmitSpy).toHaveBeenCalled();
   });
+
+  it('should handle empty API response', () => {
+    const prediction = { place_id: '12803', description: 'description' };
+    const emptyResponse = {}; // Simuler une réponse vide de l'API
+    const httpGetSpy = jest
+      .spyOn(TestBed.inject(HttpClient), 'get')
+      .mockReturnValueOnce(of(emptyResponse));
+    const locationSelectedEmitSpy = jest.spyOn(
+      component.locationSelected,
+      'emit'
+    );
+    const inputResetRequestedEmitSpy = jest.spyOn(
+      component.inputResetRequested,
+      'emit'
+    );
+
+    component.onPredictionSelected(prediction);
+
+    expect(locationSelectedEmitSpy).not.toHaveBeenCalled();
+    expect(inputResetRequestedEmitSpy).not.toHaveBeenCalled();
+  });
 });
