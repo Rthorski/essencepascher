@@ -19,7 +19,7 @@ import { StationsService } from '../stations.service';
 import { FormsModule } from '@angular/forms';
 import { ResultsComponent } from '../results/results.component';
 import { SearchBoxComponent } from '../search-box/search-box.component';
-import { environment } from '../../environments/environment';
+import { environment } from '../../environments/environment.dev';
 
 @Component({
   selector: 'app-map',
