@@ -38,7 +38,8 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              }
+              },
+              "src/environments/environment.ts"
             ],
             "styles": [
               "src/styles.scss",
